@@ -8,6 +8,11 @@ export function eventDate(): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+export function eventTimeRange(): string | null {
+  const raw = process.env.EVENT_TIME_RANGE?.trim();
+  return raw && raw.length > 0 ? raw : null;
+}
+
 export function registrationDeadline(): Date | null {
   const raw = process.env.REGISTRATION_DEADLINE;
   if (!raw) return null;

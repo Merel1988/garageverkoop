@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { eventDate, eventTimeRange, formatEventDate } from "./event";
 
 type ConfirmationEmailArgs = {
   to: string;
@@ -27,17 +28,28 @@ export async function sendConfirmationEmail({
 }: ConfirmationEmailArgs) {
   const resend = getResend();
 
+  const date = eventDate();
+  const time = eventTimeRange();
+  const when = [
+    date ? formatEventDate(date) : null,
+    time ? `van ${time}` : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   const subject = "Bevestig je aanmelding voor de garageverkoop Sambeek";
   const html = buildConfirmationHtml({
     name,
     confirmUrl,
     unsubscribeUrl,
+    when,
   });
 
   const text = [
     `Hoi ${name},`,
     ``,
     `Bedankt voor je aanmelding voor de garageverkoop in Sambeek!`,
+    when ? `Wanneer: ${when}.` : null,
     ``,
     `Bevestig je aanmelding zodat je huis op de kaart komt:`,
     confirmUrl,
@@ -46,7 +58,9 @@ export async function sendConfirmationEmail({
     unsubscribeUrl,
     ``,
     `Garageverkoop Sambeek`,
-  ].join("\n");
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
 
   await resend.emails.send({
     from: getFrom(),
@@ -61,12 +75,15 @@ function buildConfirmationHtml({
   name,
   confirmUrl,
   unsubscribeUrl,
+  when,
 }: {
   name: string;
   confirmUrl: string;
   unsubscribeUrl: string;
+  when: string;
 }): string {
   const safeName = escapeHtml(name);
+  const safeWhen = escapeHtml(when);
   return `<!doctype html>
 <html lang="nl">
   <head>
@@ -95,6 +112,11 @@ function buildConfirmationHtml({
                 <p style="margin:0 0 14px 0;font-size:16px;line-height:1.55;">
                   Bedankt voor je aanmelding voor de garageverkoop in Sambeek! Nog één klik en je huis staat op de kaart.
                 </p>
+                ${
+                  when
+                    ? `<p style="margin:0 0 14px 0;font-size:15px;line-height:1.5;color:#0b1a36;"><strong>Wanneer:</strong> ${safeWhen}.</p>`
+                    : ""
+                }
               </td>
             </tr>
             <tr>

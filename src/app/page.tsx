@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { eventDate, formatEventDate, registrationsOpen } from "@/lib/event";
+import {
+  eventDate,
+  eventTimeRange,
+  formatEventDate,
+  registrationsOpen,
+} from "@/lib/event";
 import { MapClient } from "./kaart/MapClient";
 
 export const dynamic = "force-dynamic";
@@ -121,9 +126,16 @@ export default async function HomePage() {
 }
 
 function DateBadge({ date }: { date: Date }) {
+  const time = eventTimeRange();
   return (
-    <p className="inline-flex items-center gap-2 bg-accent-300 text-brand-800 font-bold px-4 py-1.5 rounded-full text-sm uppercase tracking-wide">
-      {formatEventDate(date)}
+    <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 bg-accent-300 text-brand-800 font-bold px-4 py-1.5 rounded-full text-sm">
+      <span className="uppercase tracking-wide">{formatEventDate(date)}</span>
+      {time && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span>{time}</span>
+        </>
+      )}
     </p>
   );
 }

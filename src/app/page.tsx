@@ -38,9 +38,8 @@ export default async function HomePage() {
             <span className="text-brand-500">Sambeek</span>
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl leading-relaxed">
-            {registrations.length} deelnemende huizen staan op de kaart. Klik
-            op een pin om te navigeren of vink meerdere aan voor een
-            wandelroute.
+            {registrations.length} deelnemende huizen staan op de kaart. Klik op
+            een pin om te navigeren of vink meerdere aan voor een wandelroute.
           </p>
         </section>
         <MapClient registrations={registrations} />
@@ -58,9 +57,11 @@ export default async function HomePage() {
           <span className="text-brand-500">Sambeek</span>
         </h1>
         <p className="text-lg sm:text-xl text-gray-700 max-w-2xl leading-relaxed">
-          Zet jouw garage, schuur of oprit op de kaart. Opruimen, weggeven of
-          verkopen — buurtgenoten komen langs, jij ziet meteen je spullen een
-          nieuw thuis krijgen.
+          Het is alweer bijna tijd voor de jaarlijkse garageverkoop in Sambeek!
+          Doe jij ook (weer) mee? Meld je huis aan en geef jouw oude spullen een
+          tweede leven.<br></br>
+          De garageverkoop vindt plaats op {formatEventDate(date)} van{" "}
+          {eventTimeRange()}.
         </p>
         <div className="flex gap-3 flex-wrap pt-2">
           <Link
@@ -96,7 +97,7 @@ export default async function HomePage() {
           <Step
             num="3"
             title="Zet alles klaar"
-            body="Op de dag zelf zetten mensen hun spullen klaar. Bezoekers vinden je via de kaart en kunnen een route langs meerdere garages samenstellen."
+            body="Op de dag zelf zorg je ervoor dat je om 10:00 uur klaar zit met je spulletjes. Bezoekers vinden je via de kaart en kunnen een route langs meerdere garages samenstellen. Versier je oprit extra feestelijk om meer bezoekers te trekken!"
           />
         </div>
       </section>
@@ -107,18 +108,17 @@ export default async function HomePage() {
         </h2>
         <p className="text-gray-700 leading-relaxed">
           Geen probleem. Onderaan iedere mail die je van ons ontvangt staat een
-          persoonlijke afmeldlink. Daarmee verdwijnt je pin direct van de
-          kaart en worden je gegevens verwijderd. Je hoeft niets uit te leggen
-          en het kan op elk moment — ook op de dag zelf.
+          persoonlijke afmeldlink. Daarmee verdwijnt je pin direct van de kaart
+          en worden je gegevens verwijderd.
         </p>
       </section>
 
       <section className="text-sm text-gray-600">
         <h3 className="font-semibold text-ink mb-2">Privacy</h3>
         <p className="leading-relaxed">
-          Alleen je straat en huisnummer worden zichtbaar op de openbare kaart
-          — je naam, e-mailadres en telefoonnummer zijn alleen voor de
-          organisatie en worden niet gedeeld.
+          Alleen je straat en huisnummer worden zichtbaar op de openbare kaart.
+          Je naam, e-mailadres en telefoonnummer zijn alleen voor de organisatie
+          en worden niet gedeeld.
         </p>
       </section>
     </div>

@@ -73,7 +73,7 @@ export default async function HomePage() {
             href="/aanmelden"
             className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-7 py-3.5 rounded-full text-base transition-colors"
           >
-            Meld mijn huis aan
+            Meld je aan
           </Link>
           <Link
             href="/kaart"

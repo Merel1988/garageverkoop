@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { registrationsOpen } from "@/lib/event";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Garageverkoop Sambeek",
@@ -14,13 +21,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const showAanmelden = registrationsOpen();
   return (
-    <html lang="nl">
+    <html lang="nl" className={inter.variable}>
       <body className="min-h-screen flex flex-col">
-        <header className="bg-brand-700 text-white">
-          <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between flex-wrap gap-3">
+        <header className="sticky top-0 z-50 backdrop-blur-md bg-brand-700/90 text-white shadow-sm">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
             <Link
               href="/"
-              className="text-xl font-bold text-white no-underline hover:no-underline flex items-center gap-3"
+              className="text-lg sm:text-xl font-bold text-white no-underline hover:no-underline flex items-center gap-2 sm:gap-3"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -28,31 +35,43 @@ export default function RootLayout({
                 alt=""
                 width={36}
                 height={36}
-                className="rounded-md"
+                className="rounded-lg shrink-0"
               />
-              <span>
-                Garageverkoop <span className="text-accent-400">Sambeek</span>
+              <span className="leading-tight">
+                Garageverkoop{" "}
+                <span className="text-accent-300">Sambeek</span>
               </span>
             </Link>
-            <nav className="flex gap-5 text-sm font-medium">
-              <Link href="/" className="text-white no-underline hover:underline">
+            <nav className="flex gap-3 sm:gap-5 text-sm font-medium">
+              <Link
+                href="/"
+                className="text-white no-underline hover:underline"
+              >
                 Home
               </Link>
               {showAanmelden && (
-                <Link href="/aanmelden" className="text-white no-underline hover:underline">
+                <Link
+                  href="/aanmelden"
+                  className="text-white no-underline hover:underline"
+                >
                   Aanmelden
                 </Link>
               )}
-              <Link href="/kaart" className="text-white no-underline hover:underline">
+              <Link
+                href="/kaart"
+                className="text-white no-underline hover:underline"
+              >
                 Kaart
               </Link>
             </nav>
           </div>
-          <div className="h-1 bg-accent-400" />
+          <div className="h-[3px] bg-accent-400" />
         </header>
-        <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8">{children}</main>
-        <footer className="border-t-4 border-accent-400 bg-brand-800 text-white/90">
-          <div className="max-w-5xl mx-auto px-4 py-6 text-xs flex flex-wrap gap-4 justify-between">
+        <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
+          {children}
+        </main>
+        <footer className="mt-10 border-t border-brand-100 bg-brand-800 text-white/90">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 text-xs flex flex-wrap gap-3 justify-between">
             <span>© {new Date().getFullYear()} Garageverkoop Sambeek</span>
             <span>
               Kaartgegevens:{" "}

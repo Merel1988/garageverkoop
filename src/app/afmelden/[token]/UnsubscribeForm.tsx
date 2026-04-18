@@ -10,8 +10,10 @@ export function UnsubscribeForm({ token }: { token: string }) {
 
   if (done) {
     return (
-      <div className="bg-brand-50 border border-brand-200 rounded p-4">
-        <p className="font-medium">Je bent afgemeld. Je pin is van de kaart verwijderd.</p>
+      <div className="bg-brand-50 rounded-xl p-4">
+        <p className="font-medium">
+          Je bent afgemeld. Je pin is van de kaart verwijderd.
+        </p>
       </div>
     );
   }
@@ -30,14 +32,14 @@ export function UnsubscribeForm({ token }: { token: string }) {
       className="space-y-3"
     >
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded p-3">
+        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={isPending}
-        className="w-full bg-brand-700 hover:bg-brand-800 disabled:opacity-60 text-white font-semibold px-5 py-3 rounded-md"
+        className="w-full bg-brand-700 hover:bg-brand-800 disabled:opacity-60 text-white font-semibold px-5 py-3 rounded-full shadow-md shadow-brand-700/20 transition-transform hover:-translate-y-0.5"
       >
         {isPending ? "Bezig..." : "Ja, afmelden"}
       </button>

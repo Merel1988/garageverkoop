@@ -14,7 +14,7 @@ export default async function BevestigenPage({ params }: Props) {
 
   if (!registration) {
     return (
-      <div className="max-w-xl mx-auto bg-white border border-brand-100 rounded-lg p-8 text-center space-y-3">
+      <div className="max-w-xl mx-auto bg-white rounded-2xl p-8 shadow-sm ring-1 ring-brand-100 text-center space-y-3">
         <h1 className="text-2xl font-bold text-brand-700">Link niet geldig</h1>
         <p>
           Deze bevestigingslink is niet bekend of al gebruikt. Als je al eerder
@@ -32,8 +32,9 @@ export default async function BevestigenPage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-xl mx-auto bg-white border border-brand-100 rounded-lg p-8 text-center space-y-4">
-      <h1 className="text-2xl font-bold text-brand-700">Bedankt! 🎉</h1>
+    <div className="max-w-xl mx-auto bg-white rounded-2xl p-8 shadow-sm ring-1 ring-brand-100 text-center space-y-4">
+      <div className="text-5xl">🎉</div>
+      <h1 className="text-2xl font-bold text-brand-700">Bedankt!</h1>
       <p>
         Je aanmelding is bevestigd. Jouw huis staat nu op de kaart van de
         garageverkoop in Sambeek.
@@ -41,7 +42,7 @@ export default async function BevestigenPage({ params }: Props) {
       <div className="pt-2">
         <Link
           href="/kaart"
-          className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-5 py-3 rounded-md"
+          className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-5 py-3 rounded-full shadow-md shadow-brand-700/20 transition-transform hover:-translate-y-0.5 inline-block"
         >
           Bekijk de kaart
         </Link>

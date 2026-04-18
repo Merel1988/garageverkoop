@@ -16,7 +16,7 @@ export default async function AfmeldenPage({ params }: Props) {
 
   if (!registration) {
     return (
-      <div className="max-w-xl mx-auto bg-white border border-brand-100 rounded-lg p-8 text-center space-y-3">
+      <div className="max-w-xl mx-auto bg-white rounded-2xl p-8 shadow-sm ring-1 ring-brand-100 text-center space-y-3">
         <h1 className="text-2xl font-bold text-brand-700">
           Link niet geldig
         </h1>
@@ -32,7 +32,7 @@ export default async function AfmeldenPage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-xl mx-auto bg-white border border-brand-100 rounded-lg p-8 space-y-4">
+    <div className="max-w-xl mx-auto bg-white rounded-2xl p-6 sm:p-8 shadow-sm ring-1 ring-brand-100 space-y-4">
       <h1 className="text-2xl font-bold text-brand-700">Wil je je afmelden?</h1>
       <p>
         Je staat ingeschreven met{" "}

@@ -41,7 +41,7 @@ export default function SambeekMap({
 
   return (
     <div className="relative">
-      <div className="h-[70vh] min-h-[400px] rounded-lg overflow-hidden border border-brand-100">
+      <div className="h-[70vh] min-h-[380px] rounded-2xl overflow-hidden ring-1 ring-brand-100 shadow-sm">
         <MapContainer
           center={SAMBEEK_CENTER}
           zoom={DEFAULT_ZOOM}
@@ -58,7 +58,7 @@ export default function SambeekMap({
             return (
               <Marker key={r.id} position={[r.latitude, r.longitude]}>
                 <Popup>
-                  <div className="text-sm space-y-2 min-w-[180px]">
+                  <div className="text-sm space-y-2 min-w-[200px]">
                     <div>
                       <strong>{r.name}</strong>
                       <br />
@@ -68,15 +68,16 @@ export default function SambeekMap({
                       href={navUrl}
                       target="_blank"
                       rel="noopener"
-                      className="inline-block bg-brand-700 text-white font-semibold px-3 py-1 rounded no-underline"
+                      className="inline-block bg-brand-700 text-white font-semibold px-3 py-1.5 rounded-full no-underline"
                     >
                       Navigeer hiernaartoe
                     </a>
-                    <label className="flex gap-2 items-center text-xs pt-1 border-t border-gray-200">
+                    <label className="flex gap-2 items-center text-xs pt-2 border-t border-gray-200">
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggle(r.id)}
+                        className="accent-brand-700"
                       />
                       Voeg toe aan mijn route
                     </label>
@@ -89,24 +90,27 @@ export default function SambeekMap({
       </div>
 
       {selectedPins.length > 0 && routeUrl && (
-        <div className="fixed bottom-4 inset-x-0 flex justify-center z-[1000] pointer-events-none">
-          <div className="pointer-events-auto bg-white border-2 border-accent-400 shadow-lg rounded-full pl-4 pr-2 py-2 flex items-center gap-3">
-            <span className="text-sm font-medium text-brand-800">
+        <div className="fixed bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-0 flex justify-center z-[1000] pointer-events-none">
+          <div className="pointer-events-auto bg-white ring-1 ring-brand-100 shadow-xl rounded-full px-3 sm:pl-5 py-2 flex items-center gap-2 sm:gap-3 max-w-full">
+            <span className="hidden sm:inline text-sm font-medium text-brand-800 whitespace-nowrap">
               {selectedPins.length}{" "}
               {selectedPins.length === 1 ? "garage" : "garages"} gekozen
+            </span>
+            <span className="sm:hidden text-sm font-semibold text-brand-800 bg-accent-300 rounded-full w-7 h-7 flex items-center justify-center shrink-0">
+              {selectedPins.length}
             </span>
             <a
               href={routeUrl}
               target="_blank"
               rel="noopener"
-              className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-4 py-2 rounded-full"
+              className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-4 py-2 rounded-full text-sm whitespace-nowrap"
             >
-              Open route in Google Maps
+              Open route
             </a>
             <button
               type="button"
               onClick={() => setSelected([])}
-              className="text-xs text-gray-500 hover:text-gray-800 px-2"
+              className="text-gray-400 hover:text-gray-800 w-7 h-7 flex items-center justify-center shrink-0"
               aria-label="Route wissen"
             >
               ✕

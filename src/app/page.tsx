@@ -24,66 +24,58 @@ export default async function HomePage() {
     });
 
     return (
-      <div className="space-y-6">
-        <section className="text-center space-y-3 pt-4">
-          <h1 className="text-4xl sm:text-5xl font-bold text-brand-700">
-            Garageverkoop <span className="text-accent-500">Sambeek</span>
-          </h1>
-          {date && (
-            <p className="inline-block bg-accent-200 text-brand-800 font-semibold px-4 py-1 rounded-full">
-              📅 {formatEventDate(date)}
-            </p>
-          )}
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-            Hieronder vind je alle {registrations.length} deelnemende huizen in
-            Sambeek. Klik op een pin om naar een adres te navigeren, of vink
-            meerdere pins aan om een wandelroute samen te stellen.
-          </p>
-        </section>
+      <div className="space-y-8">
+        <Hero date={date} subtitle={`Hieronder vind je alle ${registrations.length} deelnemende huizen in Sambeek. Klik op een pin om te navigeren, of vink meerdere pins aan voor een wandelroute.`} />
         <MapClient registrations={registrations} />
       </div>
     );
   }
 
   return (
-    <div className="space-y-12">
-      <section className="text-center space-y-4 pt-4">
-        <h1 className="text-4xl sm:text-5xl font-bold text-brand-700">
-          Garageverkoop <span className="text-accent-500">Sambeek</span>
-        </h1>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-          Zet jouw garage, schuur of oprit op de kaart. Opruimen, weggeven of
-          verkopen — alle buurtgenoten zijn welkom om langs te komen.
-        </p>
-        {date && (
-          <p className="inline-block bg-accent-200 text-brand-800 font-semibold px-4 py-1 rounded-full">
-            📅 {formatEventDate(date)}
-          </p>
-        )}
-        <div className="flex gap-3 justify-center pt-2 flex-wrap">
-          <Link
-            href="/aanmelden"
-            className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-6 py-3 rounded-md"
-          >
-            Meld mijn huis aan
-          </Link>
-          <Link
-            href="/kaart"
-            className="no-underline border-2 border-brand-700 text-brand-700 font-semibold px-6 py-3 rounded-md hover:bg-brand-50"
-          >
-            Bekijk de kaart
-          </Link>
-        </div>
+    <div className="space-y-16">
+      <Hero
+        date={date}
+        subtitle="Zet jouw garage, schuur of oprit op de kaart. Opruimen, weggeven of verkopen — alle buurtgenoten zijn welkom om langs te komen."
+        actions={
+          <>
+            <Link
+              href="/aanmelden"
+              className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-6 py-3 rounded-full shadow-md shadow-brand-700/20 transition-transform hover:-translate-y-0.5"
+            >
+              Meld mijn huis aan
+            </Link>
+            <Link
+              href="/kaart"
+              className="no-underline bg-white border-2 border-brand-700 text-brand-700 font-semibold px-6 py-3 rounded-full hover:bg-brand-50 transition-colors"
+            >
+              Bekijk de kaart
+            </Link>
+          </>
+        }
+      />
+
+      <section className="grid sm:grid-cols-3 gap-4 sm:gap-6">
+        <Card
+          step="1"
+          title="Meld je aan"
+          body="Vul het korte formulier in met je naam, e-mailadres en adres in Sambeek."
+        />
+        <Card
+          step="2"
+          title="Bevestig per mail"
+          body="Je ontvangt een bevestigingsmail. Klik op de link om je pin op de kaart te zetten."
+        />
+        <Card
+          step="3"
+          title="Zet alles klaar"
+          body="Zorg dat je spullen op de dag zelf klaarstaan. Bezoekers kunnen je huis op de kaart vinden en een route samenstellen langs meerdere garages."
+        />
       </section>
 
-      <section className="grid sm:grid-cols-3 gap-6">
-        <Card title="1. Meld je aan" body="Vul het korte formulier in met je naam, e-mailadres en adres in Sambeek." />
-        <Card title="2. Bevestig per mail" body="Je ontvangt een bevestigingsmail. Klik op de link om je pin op de kaart te zetten." />
-        <Card title="3. Zet alles klaar" body="Zorg dat je spullen op de dag zelf klaarstaan. Bezoekers kunnen je huis op de kaart vinden en een route langs meerdere garages plannen." />
-      </section>
-
-      <section className="bg-white border border-brand-100 rounded-lg p-6 space-y-3 border-l-4 border-l-accent-400">
-        <h2 className="text-xl font-semibold text-brand-700">Hoe werkt het?</h2>
+      <section className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-sm ring-1 ring-brand-100 space-y-3">
+        <h2 className="text-xl sm:text-2xl font-semibold text-brand-700">
+          Hoe werkt het?
+        </h2>
         <p>
           Wil je meedoen? Meld je <Link href="/aanmelden">hier aan</Link>. Zodra
           je de bevestigingslink in je mail aanklikt, verschijnt jouw huis
@@ -100,8 +92,8 @@ export default async function HomePage() {
         </p>
       </section>
 
-      <section className="text-sm text-gray-600 border-t border-brand-100 pt-6">
-        <h3 className="font-semibold text-gray-800 mb-2">Privacy</h3>
+      <section className="text-sm text-gray-600 border-t border-brand-100 pt-6 pb-2">
+        <h3 className="font-semibold text-ink mb-2">Privacy</h3>
         <p>
           Je naam en adres worden getoond op de openbare kaart. Je e-mailadres
           en eventuele telefoonnummer worden alleen gebruikt voor communicatie
@@ -112,11 +104,63 @@ export default async function HomePage() {
   );
 }
 
-function Card({ title, body }: { title: string; body: string }) {
+function Hero({
+  date,
+  subtitle,
+  actions,
+}: {
+  date: Date | null;
+  subtitle: string;
+  actions?: React.ReactNode;
+}) {
   return (
-    <div className="bg-white border border-brand-100 rounded-lg p-5 space-y-2 border-t-4 border-t-accent-400">
-      <h3 className="font-semibold text-brand-700">{title}</h3>
-      <p className="text-sm text-gray-700">{body}</p>
+    <section className="relative isolate overflow-hidden rounded-3xl bg-gradient-to-br from-brand-50 via-white to-accent-50 px-6 sm:px-10 py-10 sm:py-16 shadow-sm ring-1 ring-brand-100">
+      <div
+        aria-hidden="true"
+        className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-accent-200/60 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-brand-200/50 blur-3xl"
+      />
+      <div className="relative text-center space-y-5 max-w-2xl mx-auto">
+        {date && (
+          <p className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-brand-800 font-semibold px-4 py-1.5 rounded-full ring-1 ring-brand-100 text-sm">
+            📅 {formatEventDate(date)}
+          </p>
+        )}
+        <h1 className="text-4xl sm:text-5xl font-bold text-brand-800 tracking-tight">
+          Garageverkoop <span className="text-accent-500">Sambeek</span>
+        </h1>
+        <p className="text-base sm:text-lg text-gray-700">{subtitle}</p>
+        {actions && (
+          <div className="flex gap-3 justify-center pt-2 flex-wrap">
+            {actions}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function Card({
+  step,
+  title,
+  body,
+}: {
+  step: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm ring-1 ring-brand-100 hover:shadow-md hover:-translate-y-0.5 transition-all">
+      <div className="flex items-center gap-3 mb-2">
+        <span className="flex items-center justify-center w-9 h-9 rounded-full bg-accent-300 text-brand-800 font-bold">
+          {step}
+        </span>
+        <h3 className="font-semibold text-brand-700">{title}</h3>
+      </div>
+      <p className="text-sm text-gray-700 leading-relaxed">{body}</p>
     </div>
   );
 }

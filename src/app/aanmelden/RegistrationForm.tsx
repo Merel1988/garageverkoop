@@ -52,9 +52,10 @@ export function RegistrationForm() {
 
   if (state === "success") {
     return (
-      <div className="bg-white border border-brand-100 rounded-lg p-6 space-y-3">
+      <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm ring-1 ring-brand-100 space-y-3 text-center">
+        <div className="text-4xl">✉️</div>
         <h2 className="text-xl font-semibold text-brand-700">
-          Check je inbox ✉️
+          Check je inbox
         </h2>
         <p>
           We hebben je een bevestigingsmail gestuurd. Klik op de link in die
@@ -73,7 +74,7 @@ export function RegistrationForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white border border-brand-100 rounded-lg p-6 space-y-4"
+      className="bg-white rounded-2xl p-5 sm:p-8 shadow-sm ring-1 ring-brand-100 space-y-5"
     >
       <Field label="Naam" name="name" required autoComplete="name" />
       <Field
@@ -83,13 +84,18 @@ export function RegistrationForm() {
         required
         autoComplete="email"
       />
-      <div className="grid grid-cols-[1fr_auto] gap-3">
-        <Field label="Straat" name="street" required autoComplete="street-address" />
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 sm:gap-4">
+        <Field
+          label="Straat"
+          name="street"
+          required
+          autoComplete="street-address"
+        />
         <Field
           label="Huisnummer"
           name="houseNumber"
           required
-          className="w-32"
+          className="sm:w-32"
           autoComplete="off"
         />
       </div>
@@ -101,12 +107,12 @@ export function RegistrationForm() {
         hint="Gebruiken we alleen bij vragen of wijzigingen. Niet zichtbaar op de kaart."
       />
 
-      <label className="flex gap-2 items-start text-sm">
+      <label className="flex gap-3 items-start text-sm bg-brand-50/60 rounded-xl p-3">
         <input
           type="checkbox"
           name="consent"
           required
-          className="mt-1"
+          className="mt-1 h-4 w-4 accent-brand-700"
           disabled={submitting}
         />
         <span>
@@ -116,7 +122,7 @@ export function RegistrationForm() {
       </label>
 
       {state === "error" && errorMessage && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded p-3">
+        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">
           {errorMessage}
         </p>
       )}
@@ -124,7 +130,7 @@ export function RegistrationForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full bg-brand-700 hover:bg-brand-800 disabled:opacity-60 text-white font-semibold px-5 py-3 rounded-md"
+        className="w-full bg-brand-700 hover:bg-brand-800 disabled:opacity-60 text-white font-semibold px-5 py-3 rounded-full shadow-md shadow-brand-700/20 transition-transform hover:-translate-y-0.5"
       >
         {submitting ? "Bezig..." : "Aanmelden"}
       </button>
@@ -151,7 +157,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-sm font-medium text-gray-800 mb-1">
+      <span className="block text-sm font-medium text-ink mb-1.5">
         {label}
         {required && <span className="text-red-600"> *</span>}
       </span>
@@ -160,7 +166,7 @@ function Field({
         name={name}
         required={required}
         autoComplete={autoComplete}
-        className={`w-full border border-brand-200 rounded-md px-3 py-2 focus:outline-none focus:border-brand-600 ${className ?? ""}`}
+        className={`w-full rounded-xl border border-brand-200 bg-white px-3.5 py-2.5 text-base focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-200 transition ${className ?? ""}`}
       />
       {hint && <span className="block text-xs text-gray-600 mt-1">{hint}</span>}
     </label>

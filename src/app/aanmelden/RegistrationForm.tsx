@@ -52,18 +52,19 @@ export function RegistrationForm() {
 
   if (state === "success") {
     return (
-      <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm ring-1 ring-brand-100 space-y-3 text-center">
+      <div className="bg-white rounded-3xl p-6 sm:p-8 space-y-3">
         <div className="text-4xl">✉️</div>
-        <h2 className="text-xl font-semibold text-brand-700">
+        <h2 className="text-2xl font-bold tracking-tight text-brand-800">
           Check je inbox
         </h2>
-        <p>
+        <p className="text-gray-700 leading-relaxed">
           We hebben je een bevestigingsmail gestuurd. Klik op de link in die
           mail om je aanmelding te bevestigen. Je pin verschijnt daarna
           automatisch op de kaart.
         </p>
         <p className="text-sm text-gray-600">
-          Geen mail ontvangen? Check je spam-map.
+          Geen mail ontvangen? Check je spam-map. In dezelfde mail vind je ook
+          een afmeldlink — handig als je je toch bedenkt.
         </p>
       </div>
     );
@@ -74,7 +75,7 @@ export function RegistrationForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl p-5 sm:p-8 shadow-sm ring-1 ring-brand-100 space-y-5"
+      className="bg-white rounded-3xl p-6 sm:p-8 space-y-5"
     >
       <Field label="Naam" name="name" required autoComplete="name" />
       <Field
@@ -107,7 +108,7 @@ export function RegistrationForm() {
         hint="Gebruiken we alleen bij vragen of wijzigingen. Niet zichtbaar op de kaart."
       />
 
-      <label className="flex gap-3 items-start text-sm bg-brand-50/60 rounded-xl p-3">
+      <label className="flex gap-3 items-start text-sm bg-brand-50 rounded-2xl p-4">
         <input
           type="checkbox"
           name="consent"
@@ -116,13 +117,13 @@ export function RegistrationForm() {
           disabled={submitting}
         />
         <span>
-          Ik ga akkoord dat mijn naam en adres op de openbare kaart worden
-          getoond.
+          Ik ga akkoord dat mijn straat en huisnummer op de openbare kaart
+          worden getoond.
         </span>
       </label>
 
       {state === "error" && errorMessage && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">
+        <p className="text-sm text-red-700 bg-red-50 rounded-2xl p-4">
           {errorMessage}
         </p>
       )}
@@ -130,7 +131,7 @@ export function RegistrationForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full bg-brand-700 hover:bg-brand-800 disabled:opacity-60 text-white font-semibold px-5 py-3 rounded-full shadow-md shadow-brand-700/20 transition-transform hover:-translate-y-0.5"
+        className="w-full bg-brand-700 hover:bg-brand-800 disabled:opacity-60 text-white font-semibold px-5 py-3.5 rounded-full transition-colors"
       >
         {submitting ? "Bezig..." : "Aanmelden"}
       </button>
@@ -157,16 +158,16 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-sm font-medium text-ink mb-1.5">
+      <span className="block text-sm font-semibold text-ink mb-1.5">
         {label}
-        {required && <span className="text-red-600"> *</span>}
+        {required && <span className="text-brand-500"> *</span>}
       </span>
       <input
         type={type}
         name={name}
         required={required}
         autoComplete={autoComplete}
-        className={`w-full rounded-xl border border-brand-200 bg-white px-3.5 py-2.5 text-base focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-200 transition ${className ?? ""}`}
+        className={`w-full rounded-xl bg-brand-50 px-4 py-3 text-base focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-500 transition ${className ?? ""}`}
       />
       {hint && <span className="block text-xs text-gray-600 mt-1">{hint}</span>}
     </label>

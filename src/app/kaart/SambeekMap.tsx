@@ -41,7 +41,7 @@ export default function SambeekMap({
 
   return (
     <div className="relative">
-      <div className="h-[70vh] min-h-[380px] rounded-2xl overflow-hidden ring-1 ring-brand-100 shadow-sm">
+      <div className="h-[70vh] min-h-[380px] rounded-3xl overflow-hidden">
         <MapContainer
           center={SAMBEEK_CENTER}
           zoom={DEFAULT_ZOOM}
@@ -59,9 +59,7 @@ export default function SambeekMap({
               <Marker key={r.id} position={[r.latitude, r.longitude]}>
                 <Popup>
                   <div className="text-sm space-y-2 min-w-[200px]">
-                    <div>
-                      <strong>{r.name}</strong>
-                      <br />
+                    <div className="font-semibold text-brand-800">
                       {r.street} {r.houseNumber}
                     </div>
                     <a

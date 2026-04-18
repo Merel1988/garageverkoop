@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  /* Sambeek-blauw — wat zachter, dieptes */
-  --color-brand-50: #eaf2fb;
-  --color-brand-100: #cfe0f4;
-  --color-brand-200: #9bbfe7;
-  --color-brand-300: #6c9edb;
-  --color-brand-400: #457dc8;
-  --color-brand-500: #2a66b8;
-  --color-brand-600: #1b519a;
-  --color-brand-700: #123e7a;
-  --color-brand-800: #0b2d5c;
-  --color-brand-900: #081f42;
+  /* Sambeek-blauw */
+  --color-brand-50: #eef4fb;
+  --color-brand-100: #d7e5f3;
+  --color-brand-200: #a7c4e4;
+  --color-brand-300: #6f9ed0;
+  --color-brand-400: #3e7abb;
+  --color-brand-500: #1f5ca6;
+  --color-brand-600: #164989;
+  --color-brand-700: #0f3a70;
+  --color-brand-800: #092955;
+  --color-brand-900: #051834;
 
-  /* Sambeek-geel — zonnig */
-  --color-accent-50: #fffaea;
+  /* Sambeek-geel */
   --color-accent-100: #fff3c4;
   --color-accent-200: #ffe48a;
   --color-accent-300: #ffd558;
   --color-accent-400: #f9c22e;
   --color-accent-500: #e5a800;
 
-  --color-cream: #fdfbf3;
-  --color-ink: #12213a;
+  --color-cream: #fbf7ec;
+  --color-ink: #0b1a36;
+  --color-paper: #ffffff;
 
   --default-font-family: var(--font-sans);
 }
@@ -35,35 +35,30 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  body {
-    background-image:
-      radial-gradient(circle at 10% -10%, #ffefbf 0%, transparent 45%),
-      radial-gradient(circle at 110% 10%, #dbe8fb 0%, transparent 55%);
-    background-attachment: fixed;
-  }
-
-  /* Alleen anchors zonder expliciete text-* kleur krijgen de merkkleur.
-     Voorkomt dat `text-white` op knoppen/header-links overruled wordt. */
   :where(a:not([class*="text-"])) {
-    color: var(--color-brand-700);
+    color: var(--color-brand-600);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--color-accent-400);
   }
 
   :where(a:not([class*="text-"])):hover {
-    text-decoration: underline;
+    text-decoration-color: var(--color-brand-600);
   }
 
   h1,
   h2,
   h3 {
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 }
 
-/* Leaflet popups passend bij thema */
+/* Leaflet popup thema */
 .leaflet-popup-content-wrapper {
-  border-radius: 12px;
+  border-radius: 14px;
+  padding: 4px;
 }
-
 .leaflet-container a.leaflet-popup-close-button {
   color: var(--color-ink);
 }

@@ -18,20 +18,18 @@ export default async function KaartPage() {
   });
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-baseline justify-between flex-wrap gap-2">
-        <h1 className="text-3xl sm:text-4xl font-bold text-brand-800 tracking-tight">
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-brand-800">
           Kaart
         </h1>
-        <p className="text-sm text-gray-600">
+        <p className="text-gray-700 leading-relaxed">
           {registrations.length}{" "}
-          {registrations.length === 1 ? "aanmelding" : "aanmeldingen"}
+          {registrations.length === 1 ? "huis doet mee" : "huizen doen mee"}.
+          Klik op een pin voor de routebeschrijving, of vink meerdere pins aan
+          om een wandelroute langs verschillende garages samen te stellen.
         </p>
       </div>
-      <p className="text-gray-700">
-        Klik op een pin voor de routebeschrijving. Vink meerdere pins aan om
-        een wandelroute samen te stellen.
-      </p>
       <MapClient registrations={registrations} />
     </div>
   );

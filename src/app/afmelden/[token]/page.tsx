@@ -16,11 +16,11 @@ export default async function AfmeldenPage({ params }: Props) {
 
   if (!registration) {
     return (
-      <div className="max-w-xl mx-auto bg-white rounded-2xl p-8 shadow-sm ring-1 ring-brand-100 text-center space-y-3">
-        <h1 className="text-2xl font-bold text-brand-700">
+      <div className="max-w-xl mx-auto bg-white rounded-3xl p-8 sm:p-10 text-center space-y-3">
+        <h1 className="text-3xl font-bold tracking-tight text-brand-800">
           Link niet geldig
         </h1>
-        <p>
+        <p className="text-gray-700">
           Deze afmeldlink is niet bekend. Misschien ben je al afgemeld, of is
           de link niet compleet gekopieerd.
         </p>
@@ -32,9 +32,11 @@ export default async function AfmeldenPage({ params }: Props) {
   }
 
   return (
-    <div className="max-w-xl mx-auto bg-white rounded-2xl p-6 sm:p-8 shadow-sm ring-1 ring-brand-100 space-y-4">
-      <h1 className="text-2xl font-bold text-brand-700">Wil je je afmelden?</h1>
-      <p>
+    <div className="max-w-xl mx-auto bg-white rounded-3xl p-6 sm:p-10 space-y-4">
+      <h1 className="text-3xl font-bold tracking-tight text-brand-800">
+        Wil je je afmelden?
+      </h1>
+      <p className="text-gray-700 leading-relaxed">
         Je staat ingeschreven met{" "}
         <strong>
           {registration.street} {registration.houseNumber}

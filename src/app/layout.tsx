@@ -23,11 +23,11 @@ export default function RootLayout({
   return (
     <html lang="nl" className={inter.variable}>
       <body className="min-h-screen flex flex-col">
-        <header className="sticky top-0 z-50 backdrop-blur-md bg-brand-700/90 text-white shadow-sm">
+        <header className="sticky top-0 z-50 bg-brand-800 text-white">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
             <Link
               href="/"
-              className="text-lg sm:text-xl font-bold text-white no-underline hover:no-underline flex items-center gap-2 sm:gap-3"
+              className="text-white no-underline hover:no-underline flex items-center gap-3 font-bold text-lg sm:text-xl"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -37,49 +37,50 @@ export default function RootLayout({
                 height={36}
                 className="rounded-lg shrink-0"
               />
-              <span className="leading-tight">
+              <span>
                 Garageverkoop{" "}
                 <span className="text-accent-300">Sambeek</span>
               </span>
             </Link>
-            <nav className="flex gap-3 sm:gap-5 text-sm font-medium">
-              <Link
-                href="/"
-                className="text-white no-underline hover:underline"
-              >
+            <nav className="flex gap-4 sm:gap-6 text-sm font-semibold">
+              <Link href="/" className="text-white no-underline hover:text-accent-300">
                 Home
               </Link>
               {showAanmelden && (
                 <Link
                   href="/aanmelden"
-                  className="text-white no-underline hover:underline"
+                  className="text-white no-underline hover:text-accent-300"
                 >
                   Aanmelden
                 </Link>
               )}
-              <Link
-                href="/kaart"
-                className="text-white no-underline hover:underline"
-              >
+              <Link href="/kaart" className="text-white no-underline hover:text-accent-300">
                 Kaart
               </Link>
             </nav>
           </div>
           <div className="h-[3px] bg-accent-400" />
         </header>
-        <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {children}
         </main>
-        <footer className="mt-10 border-t border-brand-100 bg-brand-800 text-white/90">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 text-xs flex flex-wrap gap-3 justify-between">
+        <footer className="mt-12 bg-brand-900 text-white/80">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 text-xs flex flex-wrap gap-x-4 gap-y-2 justify-between">
             <span>© {new Date().getFullYear()} Garageverkoop Sambeek</span>
-            <span>
-              Kaartgegevens:{" "}
+            <span className="flex flex-wrap gap-x-4 gap-y-1">
+              {process.env.NEXT_PUBLIC_CONTACT_EMAIL && (
+                <a
+                  href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`}
+                  className="text-accent-300 no-underline hover:underline"
+                >
+                  Vragen? {process.env.NEXT_PUBLIC_CONTACT_EMAIL}
+                </a>
+              )}
               <a
                 href="https://www.openstreetmap.org/copyright"
                 target="_blank"
                 rel="noopener"
-                className="text-accent-200"
+                className="text-accent-300 no-underline hover:underline"
               >
                 © OpenStreetMap
               </a>

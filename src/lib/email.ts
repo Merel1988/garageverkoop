@@ -39,10 +39,10 @@ export async function sendConfirmationEmail({
     ``,
     `Bedankt voor je aanmelding voor de garageverkoop in Sambeek!`,
     ``,
-    `Bevestig je aanmelding via deze link zodat jouw huis op de kaart komt:`,
+    `Bevestig je aanmelding zodat je huis op de kaart komt:`,
     confirmUrl,
     ``,
-    `Wil je je afmelden? Dat kan altijd via:`,
+    `Van gedachten veranderd? Je kunt je op elk moment afmelden — ook nadat je bevestigd hebt. Bewaar deze link goed:`,
     unsubscribeUrl,
     ``,
     `Garageverkoop Sambeek`,
@@ -74,28 +74,24 @@ function buildConfirmationHtml({
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Bevestig je aanmelding</title>
   </head>
-  <body style="margin:0;padding:0;background:#fdfbf3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#12213a;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fdfbf3;padding:24px 12px;">
+  <body style="margin:0;padding:0;background:#fbf7ec;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0b1a36;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fbf7ec;padding:24px 12px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:16px;box-shadow:0 2px 10px rgba(11,45,92,0.08);overflow:hidden;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:20px;overflow:hidden;">
             <tr>
-              <td style="background:#123e7a;padding:24px 28px;color:#ffffff;">
-                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td style="font-size:20px;font-weight:700;">
-                      Garageverkoop <span style="color:#ffd558;">Sambeek</span>
-                    </td>
-                  </tr>
-                </table>
+              <td style="background:#092955;padding:24px 28px;color:#ffffff;">
+                <div style="font-size:20px;font-weight:700;">
+                  Garageverkoop <span style="color:#ffd558;">Sambeek</span>
+                </div>
               </td>
             </tr>
             <tr>
               <td style="height:4px;background:#f9c22e;"></td>
             </tr>
             <tr>
-              <td style="padding:28px 28px 8px 28px;">
-                <h1 style="margin:0 0 12px 0;font-size:22px;color:#123e7a;">Hoi ${safeName},</h1>
+              <td style="padding:32px 28px 8px 28px;">
+                <h1 style="margin:0 0 12px 0;font-size:24px;color:#092955;letter-spacing:-0.01em;">Hoi ${safeName},</h1>
                 <p style="margin:0 0 14px 0;font-size:16px;line-height:1.55;">
                   Bedankt voor je aanmelding voor de garageverkoop in Sambeek! Nog één klik en je huis staat op de kaart.
                 </p>
@@ -104,7 +100,7 @@ function buildConfirmationHtml({
             <tr>
               <td align="center" style="padding:12px 28px 24px 28px;">
                 <a href="${confirmUrl}"
-                   style="display:inline-block;background:#123e7a;color:#ffffff;text-decoration:none;font-weight:600;padding:14px 26px;border-radius:999px;font-size:16px;box-shadow:0 2px 6px rgba(18,62,122,0.25);">
+                   style="display:inline-block;background:#0f3a70;color:#ffffff;text-decoration:none;font-weight:600;padding:14px 28px;border-radius:999px;font-size:16px;">
                   Bevestig mijn aanmelding
                 </a>
               </td>
@@ -115,20 +111,38 @@ function buildConfirmationHtml({
                   Werkt de knop niet? Kopieer deze link in je browser:
                 </p>
                 <p style="margin:0;font-size:13px;word-break:break-all;">
-                  <a href="${confirmUrl}" style="color:#123e7a;">${confirmUrl}</a>
+                  <a href="${confirmUrl}" style="color:#0f3a70;">${confirmUrl}</a>
                 </p>
               </td>
             </tr>
             <tr>
               <td style="padding:0 28px 28px 28px;">
-                <div style="border-top:1px solid #eef2f8;padding-top:18px;font-size:13px;color:#4a5565;line-height:1.5;">
-                  Van gedachten veranderd? Afmelden kan altijd via
-                  <a href="${unsubscribeUrl}" style="color:#123e7a;">deze link</a>.
-                </div>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff3c4;border-radius:16px;">
+                  <tr>
+                    <td style="padding:18px 20px;">
+                      <div style="font-size:15px;font-weight:700;color:#092955;margin-bottom:6px;">
+                        Toch niet meer meedoen?
+                      </div>
+                      <div style="font-size:14px;line-height:1.55;color:#0b1a36;">
+                        Geen probleem. Gebruik op elk moment — ook nadat je bevestigd hebt — deze persoonlijke afmeldlink:
+                      </div>
+                      <div style="margin-top:12px;">
+                        <a href="${unsubscribeUrl}"
+                           style="display:inline-block;background:#ffffff;color:#092955;text-decoration:none;font-weight:600;padding:10px 18px;border-radius:999px;font-size:14px;">
+                          Afmelden
+                        </a>
+                      </div>
+                      <div style="margin-top:12px;font-size:12px;color:#4a5565;word-break:break-all;">
+                        Bewaar deze link goed. Directe URL:<br/>
+                        <a href="${unsubscribeUrl}" style="color:#0f3a70;">${unsubscribeUrl}</a>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
             <tr>
-              <td style="background:#f7f4ea;padding:16px 28px;font-size:12px;color:#6b7280;text-align:center;">
+              <td style="background:#f3efe3;padding:16px 28px;font-size:12px;color:#6b7280;text-align:center;">
                 Garageverkoop Sambeek · Je ontvangt deze mail omdat je je huis hebt aangemeld.
               </td>
             </tr>

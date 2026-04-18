@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
+import { registrationsOpen } from "@/lib/event";
 
 export const metadata: Metadata = {
   title: "Garageverkoop Sambeek",
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const showAanmelden = registrationsOpen();
   return (
     <html lang="nl">
       <body className="min-h-screen flex flex-col">
@@ -26,9 +28,11 @@ export default function RootLayout({
               <Link href="/" className="text-white no-underline hover:underline">
                 Home
               </Link>
-              <Link href="/aanmelden" className="text-white no-underline hover:underline">
-                Aanmelden
-              </Link>
+              {showAanmelden && (
+                <Link href="/aanmelden" className="text-white no-underline hover:underline">
+                  Aanmelden
+                </Link>
+              )}
               <Link href="/kaart" className="text-white no-underline hover:underline">
                 Kaart
               </Link>

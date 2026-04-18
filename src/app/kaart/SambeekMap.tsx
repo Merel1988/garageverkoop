@@ -4,19 +4,16 @@ import { useMemo, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import iconUrl from "leaflet/dist/images/marker-icon.png";
-import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
-import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 import { SAMBEEK_CENTER, DEFAULT_ZOOM } from "@/lib/event";
 import type { RegistrationPin } from "./types";
 
-// Leaflet's default marker icon URLs are broken under bundlers — wire up the
-// bundled assets directly.
+// Leaflet's default marker icon URLs are broken under bundlers — serve them
+// from /public/leaflet/ instead.
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconUrl: iconUrl.src,
-  iconRetinaUrl: iconRetinaUrl.src,
-  shadowUrl: shadowUrl.src,
+  iconUrl: "/leaflet/marker-icon.png",
+  iconRetinaUrl: "/leaflet/marker-icon-2x.png",
+  shadowUrl: "/leaflet/marker-shadow.png",
 });
 
 export default function SambeekMap({

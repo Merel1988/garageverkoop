@@ -26,10 +26,10 @@ body {
   color: #1d2433;
 }
 
-a {
+:where(a) {
   color: var(--color-brand-700);
 }
 
-a:hover {
+:where(a):hover {
   text-decoration: underline;
 }

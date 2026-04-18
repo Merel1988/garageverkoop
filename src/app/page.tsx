@@ -1,9 +1,49 @@
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 import { eventDate, formatEventDate, registrationsOpen } from "@/lib/event";
+import { MapClient } from "./kaart/MapClient";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
   const date = eventDate();
   const open = registrationsOpen();
+
+  if (!open) {
+    const registrations = await prisma.registration.findMany({
+      where: { confirmedAt: { not: null } },
+      select: {
+        id: true,
+        name: true,
+        street: true,
+        houseNumber: true,
+        latitude: true,
+        longitude: true,
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
+    return (
+      <div className="space-y-6">
+        <section className="text-center space-y-3 pt-4">
+          <h1 className="text-4xl sm:text-5xl font-bold text-brand-700">
+            Garageverkoop <span className="text-accent-500">Sambeek</span>
+          </h1>
+          {date && (
+            <p className="inline-block bg-accent-200 text-brand-800 font-semibold px-4 py-1 rounded-full">
+              📅 {formatEventDate(date)}
+            </p>
+          )}
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+            Hieronder vind je alle {registrations.length} deelnemende huizen in
+            Sambeek. Klik op een pin om naar een adres te navigeren, of vink
+            meerdere pins aan om een wandelroute samen te stellen.
+          </p>
+        </section>
+        <MapClient registrations={registrations} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-12">
@@ -21,18 +61,12 @@ export default function HomePage() {
           </p>
         )}
         <div className="flex gap-3 justify-center pt-2 flex-wrap">
-          {open ? (
-            <Link
-              href="/aanmelden"
-              className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-6 py-3 rounded-md"
-            >
-              Meld mijn huis aan
-            </Link>
-          ) : (
-            <span className="bg-gray-200 text-gray-600 font-semibold px-6 py-3 rounded-md">
-              Aanmeldingen zijn gesloten
-            </span>
-          )}
+          <Link
+            href="/aanmelden"
+            className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-6 py-3 rounded-md"
+          >
+            Meld mijn huis aan
+          </Link>
           <Link
             href="/kaart"
             className="no-underline border-2 border-brand-700 text-brand-700 font-semibold px-6 py-3 rounded-md hover:bg-brand-50"

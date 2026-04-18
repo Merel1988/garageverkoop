@@ -49,19 +49,32 @@ export async function POST(request: Request) {
   const confirmToken = generateToken();
   const unsubscribeToken = generateToken();
 
-  await prisma.registration.create({
-    data: {
-      name,
-      email,
-      street,
-      houseNumber,
-      phone,
-      latitude: geo.latitude,
-      longitude: geo.longitude,
-      confirmToken,
-      unsubscribeToken,
-    },
-  });
+  let registrationId: string;
+  try {
+    const created = await prisma.registration.create({
+      data: {
+        name,
+        email,
+        street,
+        houseNumber,
+        phone,
+        latitude: geo.latitude,
+        longitude: geo.longitude,
+        confirmToken,
+        unsubscribeToken,
+      },
+    });
+    registrationId = created.id;
+  } catch (err) {
+    console.error("Database insert failed", err);
+    return NextResponse.json(
+      {
+        error:
+          "We konden je aanmelding niet opslaan. Probeer het later opnieuw of neem contact op met de organisatie.",
+      },
+      { status: 500 },
+    );
+  }
 
   const base = siteUrl();
   try {
@@ -73,12 +86,15 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("Email send failed", err);
+    await prisma.registration
+      .delete({ where: { id: registrationId } })
+      .catch(() => {});
     return NextResponse.json(
       {
         error:
-          "Je aanmelding is opgeslagen maar de bevestigingsmail kon niet verstuurd worden. Neem contact op met de organisatie.",
+          "De bevestigingsmail kon niet verstuurd worden. Controleer je e-mailadres of neem contact op met de organisatie.",
       },
-      { status: 500 },
+      { status: 502 },
     );
   }
 

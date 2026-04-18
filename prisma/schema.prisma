@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Registration {
+  id               String    @id @default(cuid())
+  name             String
+  email            String
+  street           String
+  houseNumber      String
+  phone            String?
+  latitude         Float
+  longitude        Float
+  confirmedAt      DateTime?
+  confirmToken     String    @unique
+  unsubscribeToken String    @unique
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([confirmedAt])
+  @@index([email])
+}

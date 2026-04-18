@@ -1,0 +1,139 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import iconUrl from "leaflet/dist/images/marker-icon.png";
+import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
+import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+import { SAMBEEK_CENTER, DEFAULT_ZOOM } from "@/lib/event";
+import type { RegistrationPin } from "./types";
+
+// Leaflet's default marker icon URLs are broken under bundlers — wire up the
+// bundled assets directly.
+delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: iconUrl.src,
+  iconRetinaUrl: iconRetinaUrl.src,
+  shadowUrl: shadowUrl.src,
+});
+
+export default function SambeekMap({
+  registrations,
+}: {
+  registrations: RegistrationPin[];
+}) {
+  const [selected, setSelected] = useState<string[]>([]);
+
+  const selectedPins = useMemo(
+    () =>
+      selected
+        .map((id) => registrations.find((r) => r.id === id))
+        .filter((r): r is RegistrationPin => Boolean(r)),
+    [selected, registrations],
+  );
+
+  function toggle(id: string) {
+    setSelected((cur) =>
+      cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id],
+    );
+  }
+
+  const routeUrl = buildRouteUrl(selectedPins);
+
+  return (
+    <div className="relative">
+      <div className="h-[70vh] min-h-[400px] rounded-lg overflow-hidden border border-brand-100">
+        <MapContainer
+          center={SAMBEEK_CENTER}
+          zoom={DEFAULT_ZOOM}
+          scrollWheelZoom
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {registrations.map((r) => {
+            const isSelected = selected.includes(r.id);
+            const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${r.latitude},${r.longitude}`;
+            return (
+              <Marker key={r.id} position={[r.latitude, r.longitude]}>
+                <Popup>
+                  <div className="text-sm space-y-2 min-w-[180px]">
+                    <div>
+                      <strong>{r.name}</strong>
+                      <br />
+                      {r.street} {r.houseNumber}
+                    </div>
+                    <a
+                      href={navUrl}
+                      target="_blank"
+                      rel="noopener"
+                      className="inline-block bg-brand-700 text-white font-semibold px-3 py-1 rounded no-underline"
+                    >
+                      Navigeer hiernaartoe
+                    </a>
+                    <label className="flex gap-2 items-center text-xs pt-1 border-t border-gray-200">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggle(r.id)}
+                      />
+                      Voeg toe aan mijn route
+                    </label>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MapContainer>
+      </div>
+
+      {selectedPins.length > 0 && routeUrl && (
+        <div className="fixed bottom-4 inset-x-0 flex justify-center z-[1000] pointer-events-none">
+          <div className="pointer-events-auto bg-white border-2 border-accent-400 shadow-lg rounded-full pl-4 pr-2 py-2 flex items-center gap-3">
+            <span className="text-sm font-medium text-brand-800">
+              {selectedPins.length}{" "}
+              {selectedPins.length === 1 ? "garage" : "garages"} gekozen
+            </span>
+            <a
+              href={routeUrl}
+              target="_blank"
+              rel="noopener"
+              className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-4 py-2 rounded-full"
+            >
+              Open route in Google Maps
+            </a>
+            <button
+              type="button"
+              onClick={() => setSelected([])}
+              className="text-xs text-gray-500 hover:text-gray-800 px-2"
+              aria-label="Route wissen"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function buildRouteUrl(pins: RegistrationPin[]): string | null {
+  if (pins.length === 0) return null;
+  const destination = pins[pins.length - 1];
+  const waypoints = pins.slice(0, -1);
+  const params = new URLSearchParams();
+  params.set("api", "1");
+  params.set("travelmode", "walking");
+  params.set("destination", `${destination.latitude},${destination.longitude}`);
+  if (waypoints.length > 0) {
+    params.set(
+      "waypoints",
+      waypoints.map((p) => `${p.latitude},${p.longitude}`).join("|"),
+    );
+  }
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
+}

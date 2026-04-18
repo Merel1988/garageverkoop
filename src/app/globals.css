@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  /* Sambeek-blauw (primair) */
+  --color-brand-50: #eaf2fb;
+  --color-brand-100: #c8dbf2;
+  --color-brand-200: #90b4e2;
+  --color-brand-500: #2766b8;
+  --color-brand-600: #1b519a;
+  --color-brand-700: #123e7a;
+  --color-brand-800: #0b2d5c;
+
+  /* Sambeek-geel (accent) */
+  --color-accent-50: #fff8dd;
+  --color-accent-200: #ffe48a;
+  --color-accent-400: #f9c22e;
+  --color-accent-500: #e5a800;
+  --color-accent-700: #8a6200;
+
+  --color-cream: #fffdf5;
+}
+
+html,
+body {
+  background: var(--color-cream);
+  color: #1d2433;
+}
+
+a {
+  color: var(--color-brand-700);
+}
+
+a:hover {
+  text-decoration: underline;
+}

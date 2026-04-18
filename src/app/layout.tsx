@@ -20,9 +20,19 @@ export default function RootLayout({
           <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between flex-wrap gap-3">
             <Link
               href="/"
-              className="text-xl font-bold text-white no-underline hover:no-underline"
+              className="text-xl font-bold text-white no-underline hover:no-underline flex items-center gap-3"
             >
-              Garageverkoop <span className="text-accent-400">Sambeek</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.svg"
+                alt=""
+                width={36}
+                height={36}
+                className="rounded-md"
+              />
+              <span>
+                Garageverkoop <span className="text-accent-400">Sambeek</span>
+              </span>
             </Link>
             <nav className="flex gap-5 text-sm font-medium">
               <Link href="/" className="text-white no-underline hover:underline">

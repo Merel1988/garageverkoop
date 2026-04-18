@@ -59,9 +59,14 @@ export default async function HomePage() {
         <p className="text-lg sm:text-xl text-gray-700 max-w-2xl leading-relaxed">
           Het is alweer bijna tijd voor de jaarlijkse garageverkoop in Sambeek!
           Doe jij ook (weer) mee? Meld je huis aan en geef jouw oude spullen een
-          tweede leven.<br></br>
-          De garageverkoop vindt plaats op {formatEventDate(date)} van{" "}
-          {eventTimeRange()}.
+          tweede leven.
+          {date && (
+            <>
+              <br />
+              De garageverkoop vindt plaats op {formatEventDate(date)}
+              {eventTimeRange() ? ` van ${eventTimeRange()}` : ""}.
+            </>
+          )}
         </p>
         <div className="flex gap-3 flex-wrap pt-2">
           <Link

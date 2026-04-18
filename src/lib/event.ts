@@ -1,4 +1,4 @@
-export const SAMBEEK_CENTER: [number, number] = [51.6381, 5.9342];
+export const SAMBEEK_CENTER: [number, number] = [51.6357, 5.9658];
 export const DEFAULT_ZOOM = 15;
 
 export function eventDate(): Date | null {

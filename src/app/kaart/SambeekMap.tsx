@@ -39,9 +39,26 @@ export default function SambeekMap({
   }
 
   const routeUrl = buildRouteUrl(selectedPins);
+  const allSelected =
+    registrations.length > 0 && selected.length === registrations.length;
+
+  function toggleAll() {
+    setSelected(allSelected ? [] : registrations.map((r) => r.id));
+  }
 
   return (
     <div className="relative">
+      {registrations.length > 1 && (
+        <div className="flex justify-end mb-3">
+          <button
+            type="button"
+            onClick={toggleAll}
+            className="bg-accent-300 hover:bg-accent-400 text-brand-800 font-semibold px-4 py-2 rounded-full text-sm transition-colors"
+          >
+            {allSelected ? "Deselecteer alle" : "Selecteer alle huizen"}
+          </button>
+        </div>
+      )}
       <div className="h-[70vh] min-h-[380px] rounded-3xl overflow-hidden">
         <MapContainer
           center={SAMBEEK_CENTER}

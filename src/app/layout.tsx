@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { registrationsOpen } from "@/lib/event";
+import { SiteNav } from "./SiteNav";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,7 +14,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Garageverkoop Sambeek",
   description:
-    "Meld je huis aan voor de garageverkoop in Sambeek en ontdek welke garages op de kaart staan.",
+    "Meld je huis aan voor de garageverkoop in Sambeek en/of ontdek welke garages op de kaart staan.",
 };
 
 export default function RootLayout({
@@ -24,40 +25,26 @@ export default function RootLayout({
     <html lang="nl" className={inter.variable}>
       <body className="min-h-screen flex flex-col">
         <header className="sticky top-0 z-50 bg-brand-800 text-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-            <Link
-              href="/"
-              className="text-white no-underline hover:no-underline flex items-center gap-3 font-bold text-lg sm:text-xl"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo.svg"
-                alt=""
-                width={36}
-                height={36}
-                className="rounded-lg shrink-0"
-              />
-              <span>
-                Garageverkoop{" "}
-                <span className="text-accent-300">Sambeek</span>
-              </span>
-            </Link>
-            <nav className="flex gap-4 sm:gap-6 text-sm font-semibold">
-              <Link href="/" className="text-white no-underline hover:text-accent-300">
-                Home
+          <div className="relative">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+              <Link
+                href="/"
+                className="text-white no-underline hover:no-underline flex items-center gap-3 font-bold text-lg sm:text-xl"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo.svg"
+                  alt=""
+                  width={36}
+                  height={36}
+                  className="rounded-lg shrink-0"
+                />
+                <span>
+                  Garageverkoop <span className="text-accent-300">Sambeek</span>
+                </span>
               </Link>
-              {showAanmelden && (
-                <Link
-                  href="/aanmelden"
-                  className="text-white no-underline hover:text-accent-300"
-                >
-                  Aanmelden
-                </Link>
-              )}
-              <Link href="/kaart" className="text-white no-underline hover:text-accent-300">
-                Kaart
-              </Link>
-            </nav>
+              <SiteNav showAanmelden={showAanmelden} />
+            </div>
           </div>
           <div className="h-[3px] bg-accent-400" />
         </header>

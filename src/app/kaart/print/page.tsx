@@ -1,21 +1,25 @@
 import { prisma } from "@/lib/prisma";
-import {
-  eventDate,
-  eventTimeRange,
-  formatEventDate,
-} from "@/lib/event";
+import { eventDate, eventTimeRange, formatEventDate } from "@/lib/event";
 import { PrintButton } from "./PrintButton";
+import { PrintMapClient } from "./PrintMapClient";
+import type { NumberedPin } from "./types";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Printlijst · Garageverkoop Sambeek",
+  title: "Printversie · Garageverkoop Sambeek",
 };
 
 export default async function PrintPage() {
   const registrations = await prisma.registration.findMany({
     where: { confirmedAt: { not: null } },
-    select: { street: true, houseNumber: true },
+    select: {
+      id: true,
+      street: true,
+      houseNumber: true,
+      latitude: true,
+      longitude: true,
+    },
   });
 
   const sorted = [...registrations].sort((a, b) => {
@@ -26,13 +30,18 @@ export default async function PrintPage() {
     return numericHouseNumber(a.houseNumber) - numericHouseNumber(b.houseNumber);
   });
 
+  const numbered: NumberedPin[] = sorted.map((r, i) => ({
+    ...r,
+    number: i + 1,
+  }));
+
   const date = eventDate();
   const time = eventTimeRange();
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 print:space-y-4">
-      <header className="space-y-1 print:space-y-0.5">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-800 print:text-black">
+    <div className="max-w-4xl mx-auto space-y-6 print:space-y-3">
+      <header className="space-y-1 print:space-y-0">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-800 print:text-black print:text-2xl">
           Garageverkoop Sambeek
         </h1>
         <p className="text-gray-700 print:text-black">
@@ -41,27 +50,31 @@ export default async function PrintPage() {
           {time}
         </p>
         <p className="text-sm text-gray-600 print:text-black">
-          {sorted.length} deelnemende huizen
+          {numbered.length} deelnemende huizen
         </p>
       </header>
 
       <PrintButton />
 
-      <ol className="print:columns-2 print:gap-8 space-y-1 list-decimal list-inside marker:text-brand-800 marker:font-bold print:marker:text-black">
-        {sorted.map((r, idx) => (
-          <li
-            key={`${r.street}-${r.houseNumber}-${idx}`}
-            className="text-base print:text-sm break-inside-avoid"
-          >
-            <span className="font-medium">{r.street}</span> {r.houseNumber}
-          </li>
-        ))}
-      </ol>
-
-      {sorted.length === 0 && (
+      {numbered.length === 0 ? (
         <p className="text-gray-600 italic">
           Nog geen bevestigde aanmeldingen.
         </p>
+      ) : (
+        <>
+          <PrintMapClient pins={numbered} />
+
+          <ol className="print:columns-2 print:gap-8 space-y-1 list-decimal list-inside marker:text-brand-800 marker:font-bold print:marker:text-black break-before-auto">
+            {numbered.map((r) => (
+              <li
+                key={r.id}
+                className="text-base print:text-sm break-inside-avoid"
+              >
+                <span className="font-medium">{r.street}</span> {r.houseNumber}
+              </li>
+            ))}
+          </ol>
+        </>
       )}
     </div>
   );

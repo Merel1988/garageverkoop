@@ -50,7 +50,8 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-20 sm:space-y-28">
-      <section className="space-y-6 py-4 sm:py-8">
+      <section className="space-y-6 py-4 sm:py-8 relative">
+        <Sparkles />
         {date && <DateBadge date={date} />}
         <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight text-brand-800 leading-[0.95]">
           Garageverkoop
@@ -113,8 +114,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <Sparkles />
-
       <section className="bg-coral-100 rounded-3xl p-8 sm:p-12 space-y-3">
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-coral-500">
           Toch afmelden?
@@ -153,14 +152,46 @@ function ShelfIllustration() {
 
 function Sparkles() {
   return (
-    <div className="-my-4 sm:-my-8 pointer-events-none select-none" aria-hidden="true">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/illustraties/sparkles.png"
-        alt=""
-        className="w-full max-w-2xl mx-auto h-auto block mix-blend-multiply"
-      />
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 -z-10 pointer-events-none overflow-hidden"
+    >
+      <Sparkle className="top-0 left-[6%] w-5 text-accent-400 rotate-12" />
+      <Sparkle className="top-10 left-[22%] w-3 text-coral-400 -rotate-6" />
+      <Sparkle className="top-2 left-[42%] w-4 text-accent-300" />
+      <Sparkle className="bottom-8 left-[30%] w-3 text-brand-400 rotate-45" />
+      <Sparkle className="top-4 right-[35%] w-4 text-coral-300" />
+      <Sparkle className="top-14 right-[18%] w-6 text-coral-400 rotate-12" />
+      <Sparkle className="top-2 right-[6%] w-3 text-accent-400 -rotate-12" />
+      <Sparkle className="bottom-6 right-[12%] w-4 text-brand-300" />
+      <Dot className="top-6 left-[14%] bg-coral-400" />
+      <Dot className="top-20 left-[36%] bg-accent-400" />
+      <Dot className="bottom-4 left-[48%] bg-brand-400" />
+      <Dot className="top-4 right-[28%] bg-accent-500" />
+      <Dot className="bottom-10 right-[6%] bg-coral-400" />
     </div>
+  );
+}
+
+function Sparkle({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={`absolute ${className ?? ""}`}
+      aria-hidden="true"
+    >
+      <path d="M12 1.5 L13.6 10.4 L22.5 12 L13.6 13.6 L12 22.5 L10.4 13.6 L1.5 12 L10.4 10.4 Z" />
+    </svg>
+  );
+}
+
+function Dot({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`absolute w-1.5 h-1.5 rounded-full ${className ?? ""}`}
+    />
   );
 }
 

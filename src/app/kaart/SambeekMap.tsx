@@ -40,7 +40,7 @@ export default function SambeekMap({
     );
   }
 
-  const routeUrl = buildRouteUrl(selectedPins);
+  const routeUrls = buildRouteUrls(selectedPins);
   const allSelected =
     registrations.length > 0 && selected.length === registrations.length;
 
@@ -112,24 +112,25 @@ export default function SambeekMap({
         </MapContainer>
       </div>
 
-      {selectedPins.length > 0 && routeUrl && (
+      {selectedPins.length > 0 && routeUrls.length > 0 && (
         <div className="fixed bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-0 flex justify-center z-[1000] pointer-events-none">
-          <div className="pointer-events-auto bg-white ring-1 ring-brand-100 shadow-xl rounded-full px-3 sm:pl-5 py-2 flex items-center gap-2 sm:gap-3 max-w-full">
-            <span className="hidden sm:inline text-sm font-medium text-brand-800 whitespace-nowrap">
+          <div className="pointer-events-auto bg-white ring-1 ring-brand-100 shadow-xl rounded-2xl px-3 py-2 flex flex-wrap items-center gap-2 max-w-[min(100%,40rem)]">
+            <span className="text-sm font-semibold text-brand-800 whitespace-nowrap">
               {selectedPins.length}{" "}
               {selectedPins.length === 1 ? "garage" : "garages"} gekozen
             </span>
-            <span className="sm:hidden text-sm font-semibold text-brand-800 bg-accent-300 rounded-full w-7 h-7 flex items-center justify-center shrink-0">
-              {selectedPins.length}
-            </span>
-            <a
-              href={routeUrl}
-              target="_blank"
-              rel="noopener"
-              className="no-underline bg-brand-700 hover:bg-brand-800 text-white font-semibold px-4 py-2 rounded-full text-sm whitespace-nowrap"
-            >
-              Open route
-            </a>
+            {routeUrls.map((url, i) => (
+              <a
+                key={i}
+                href={url}
+                target="_blank"
+                rel="noopener"
+                style={{ color: "#ffffff" }}
+                className="no-underline bg-brand-700 hover:bg-brand-800 font-semibold px-3.5 py-1.5 rounded-full text-sm whitespace-nowrap"
+              >
+                {routeUrls.length === 1 ? "Open route" : `Route ${i + 1}`}
+              </a>
+            ))}
             <button
               type="button"
               onClick={() => setSelected([])}
@@ -138,6 +139,13 @@ export default function SambeekMap({
             >
               ✕
             </button>
+            {routeUrls.length > 1 && (
+              <p className="basis-full text-xs text-gray-600 leading-snug">
+                Google Maps kan maximaal 10 stops per route aan, dus we hebben
+                het opgesplitst in {routeUrls.length} delen. Start met Route 1
+                en open daarna Route 2 als je verder loopt.
+              </p>
+            )}
           </div>
         </div>
       )}
@@ -145,19 +153,28 @@ export default function SambeekMap({
   );
 }
 
-function buildRouteUrl(pins: RegistrationPin[]): string | null {
-  if (pins.length === 0) return null;
-  const destination = pins[pins.length - 1];
-  const waypoints = pins.slice(0, -1);
-  const params = new URLSearchParams();
-  params.set("api", "1");
-  params.set("travelmode", "walking");
-  params.set("destination", `${destination.latitude},${destination.longitude}`);
-  if (waypoints.length > 0) {
-    params.set(
-      "waypoints",
-      waypoints.map((p) => `${p.latitude},${p.longitude}`).join("|"),
-    );
+// Google Maps' URL directions endpoint accepts max 9 waypoints + 1 destination
+// (10 stops total). Chunk bigger selections into multiple routes.
+const MAX_STOPS_PER_ROUTE = 10;
+
+function buildRouteUrls(pins: RegistrationPin[]): string[] {
+  if (pins.length === 0) return [];
+  const urls: string[] = [];
+  for (let i = 0; i < pins.length; i += MAX_STOPS_PER_ROUTE) {
+    const chunk = pins.slice(i, i + MAX_STOPS_PER_ROUTE);
+    const destination = chunk[chunk.length - 1];
+    const waypoints = chunk.slice(0, -1);
+    const params = new URLSearchParams();
+    params.set("api", "1");
+    params.set("travelmode", "walking");
+    params.set("destination", `${destination.latitude},${destination.longitude}`);
+    if (waypoints.length > 0) {
+      params.set(
+        "waypoints",
+        waypoints.map((p) => `${p.latitude},${p.longitude}`).join("|"),
+      );
+    }
+    urls.push(`https://www.google.com/maps/dir/?${params.toString()}`);
   }
-  return `https://www.google.com/maps/dir/?${params.toString()}`;
+  return urls;
 }

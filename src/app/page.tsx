@@ -65,7 +65,8 @@ export default async function HomePage() {
           {date && (
             <>
               <br />
-              De garageverkoop vindt plaats op {formatEventDate(date)}
+              De garageverkoop vindt plaats op 1ste pinksterdag{" "}
+              {formatEventDate(date)}
               {eventTimeRange() ? ` van ${eventTimeRange()}` : ""}.
             </>
           )}

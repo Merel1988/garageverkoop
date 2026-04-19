@@ -36,7 +36,7 @@ export default async function KaartPage() {
           href="/kaart/print"
           className="no-underline bg-accent-300 hover:bg-accent-400 text-brand-800 font-semibold px-4 py-2 rounded-full text-sm whitespace-nowrap"
         >
-          Print lijst
+          Print kaart
         </Link>
       </div>
       <MapClient registrations={registrations} />

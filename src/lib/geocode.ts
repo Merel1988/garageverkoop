@@ -16,7 +16,8 @@ export type GeocodeResult =
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 
 function userAgent(): string {
-  const contact = process.env.NOMINATIM_CONTACT_EMAIL || "noreply@garageverkoopsambeek.nl";
+  const contact =
+    process.env.NOMINATIM_CONTACT_EMAIL || "info@garageverkoopsambeek.nl";
   return `GarageverkoopSambeek/1.0 (${contact})`;
 }
 

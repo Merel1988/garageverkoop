@@ -63,8 +63,8 @@ export default async function BevestigenPage({ params }: Props) {
           Toch niet meer meedoen?
         </h2>
         <p className="text-sm text-gray-800 leading-relaxed">
-          Geen probleem. Gebruik onderstaande afmeldlink — of dezelfde link uit
-          de bevestigingsmail die je net ontvangen hebt — om je inschrijving
+          Geen probleem. Gebruik onderstaande afmeldlink (of dezelfde link uit
+          de bevestigingsmail die je net ontvangen hebt) om je inschrijving
           ongedaan te maken. Je pin verdwijnt dan direct van de kaart en we
           verwijderen je gegevens.
         </p>

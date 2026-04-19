@@ -48,9 +48,7 @@ type Row = Awaited<ReturnType<typeof prisma.registration.findMany>>[number];
 
 function RegistrationTable({ rows }: { rows: Row[] }) {
   if (rows.length === 0) {
-    return (
-      <p className="text-sm text-gray-600 italic">Geen aanmeldingen.</p>
-    );
+    return <p className="text-sm text-gray-600 italic">Geen aanmeldingen.</p>;
   }
   return (
     <div className="overflow-x-auto bg-white border border-brand-100 rounded-lg">

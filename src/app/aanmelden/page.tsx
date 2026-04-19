@@ -26,9 +26,9 @@ export default function AanmeldenPage() {
           Meld je huis aan
         </h1>
         <p className="text-gray-700 leading-relaxed">
-          Vul het formulier in. Je ontvangt een bevestigingsmail met een link
-          om je aanmelding te bevestigen — pas daarna verschijnt jouw pin op
-          de kaart. In diezelfde mail staat ook een afmeldlink, mocht je je
+          Vul het formulier in. Je ontvangt een bevestigingsmail met een link om
+          je aanmelding te bevestigen en pas daarna verschijnt jouw pin op de
+          kaart. In diezelfde mail staat ook een afmeldlink, mocht je je
           bedenken.
         </p>
       </div>

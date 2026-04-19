@@ -54,7 +54,7 @@ export async function sendConfirmationEmail({
     `Bevestig je aanmelding zodat je huis op de kaart komt:`,
     confirmUrl,
     ``,
-    `Van gedachten veranderd? Je kunt je op elk moment afmelden — ook nadat je bevestigd hebt. Bewaar deze link goed:`,
+    `Van gedachten veranderd? Je kunt je op elk moment afmelden, ook nadat je bevestigd hebt. Bewaar deze link goed:`,
     unsubscribeUrl,
     ``,
     `Garageverkoop Sambeek`,
@@ -146,7 +146,7 @@ function buildConfirmationHtml({
                         Toch niet meer meedoen?
                       </div>
                       <div style="font-size:14px;line-height:1.55;color:#0b1a36;">
-                        Geen probleem. Gebruik op elk moment — ook nadat je bevestigd hebt — deze persoonlijke afmeldlink:
+                        Geen probleem. Gebruik op elk moment (ook nadat je bevestigd hebt) deze persoonlijke afmeldlink:
                       </div>
                       <div style="margin-top:12px;">
                         <a href="${unsubscribeUrl}"
@@ -165,7 +165,7 @@ function buildConfirmationHtml({
             </tr>
             <tr>
               <td style="background:#f3efe3;padding:16px 28px;font-size:12px;color:#6b7280;text-align:center;">
-                Garageverkoop Sambeek · Je ontvangt deze mail omdat je je huis hebt aangemeld.
+                Garageverkoop Sambeek · Je ontvangt deze mail omdat je je adres hebt aangemeld.
               </td>
             </tr>
           </table>

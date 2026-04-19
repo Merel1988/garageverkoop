@@ -64,7 +64,7 @@ export function RegistrationForm() {
         </p>
         <p className="text-sm text-gray-600">
           Geen mail ontvangen? Check je spam-map. In dezelfde mail vind je ook
-          een afmeldlink — handig als je je toch bedenkt.
+          een afmeldlink, handig voor als je je toch bedenkt.
         </p>
       </div>
     );

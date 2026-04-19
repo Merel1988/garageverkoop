@@ -9,7 +9,8 @@ import type { RegistrationPin } from "./types";
 
 // Leaflet's default marker icon URLs are broken under bundlers — serve them
 // from /public/leaflet/ instead.
-delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
+  ._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: "/leaflet/marker-icon.png",
   iconRetinaUrl: "/leaflet/marker-icon-2x.png",

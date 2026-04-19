@@ -42,6 +42,7 @@ export default async function HomePage() {
             een pin om te navigeren of vink meerdere aan voor een wandelroute.
           </p>
         </section>
+        <ShelfIllustration />
         <MapClient registrations={registrations} />
       </div>
     );
@@ -84,6 +85,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <ShelfIllustration />
+
       <section>
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-brand-800 mb-8 sm:mb-10">
           Hoe werkt het?
@@ -110,11 +113,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-brand-50 rounded-3xl p-8 sm:p-12 space-y-3">
-        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-brand-800">
+      <Sparkles />
+
+      <section className="bg-coral-100 rounded-3xl p-8 sm:p-12 space-y-3">
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-coral-500">
           Toch afmelden?
         </h2>
-        <p className="text-gray-700 leading-relaxed">
+        <p className="text-gray-800 leading-relaxed">
           Geen probleem. Onderaan iedere mail die je van ons ontvangt staat een
           persoonlijke afmeldlink. Daarmee verdwijnt je pin direct van de kaart
           en worden je gegevens verwijderd.
@@ -129,6 +134,32 @@ export default async function HomePage() {
           en worden niet gedeeld.
         </p>
       </section>
+    </div>
+  );
+}
+
+function ShelfIllustration() {
+  return (
+    <div className="rounded-3xl overflow-hidden bg-[#fdf1c6]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/illustraties/garage-schap.png"
+        alt="Plank met tweedehands spullen — boeken, theepot, lamp, knuffelbeer, bloem en lijstje — met prijskaartjes erbij"
+        className="w-full h-auto block"
+      />
+    </div>
+  );
+}
+
+function Sparkles() {
+  return (
+    <div className="-my-4 sm:-my-8 pointer-events-none select-none" aria-hidden="true">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/illustraties/sparkles.png"
+        alt=""
+        className="w-full max-w-2xl mx-auto h-auto block mix-blend-multiply"
+      />
     </div>
   );
 }

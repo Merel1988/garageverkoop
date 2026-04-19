@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="nl" className={inter.variable}>
       <body className="min-h-screen flex flex-col">
-        <header className="sticky top-0 z-50 bg-brand-800 text-white">
+        <header className="sticky top-0 z-50 bg-brand-800 text-white print:hidden">
           <div className="relative">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
               <Link
@@ -51,27 +51,17 @@ export default function RootLayout({
         <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {children}
         </main>
-        <footer className="mt-12 bg-brand-900 text-white/80">
+        <footer className="mt-12 bg-brand-900 text-white/80 print:hidden">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 text-xs flex flex-wrap gap-x-4 gap-y-2 justify-between">
             <span>© {new Date().getFullYear()} Garageverkoop Sambeek</span>
-            <span className="flex flex-wrap gap-x-4 gap-y-1">
-              {process.env.NEXT_PUBLIC_CONTACT_EMAIL && (
-                <a
-                  href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`}
-                  className="text-accent-300 no-underline hover:underline"
-                >
-                  Vragen? {process.env.NEXT_PUBLIC_CONTACT_EMAIL}
-                </a>
-              )}
+            {process.env.NEXT_PUBLIC_CONTACT_EMAIL && (
               <a
-                href="https://www.openstreetmap.org/copyright"
-                target="_blank"
-                rel="noopener"
+                href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`}
                 className="text-accent-300 no-underline hover:underline"
               >
-                © OpenStreetMap
+                Vragen? {process.env.NEXT_PUBLIC_CONTACT_EMAIL}
               </a>
-            </span>
+            )}
           </div>
         </footer>
       </body>

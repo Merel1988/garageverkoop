@@ -91,16 +91,19 @@ export default async function HomePage() {
         <div className="grid sm:grid-cols-3 gap-8 sm:gap-10">
           <Step
             num="1"
+            tone="blue"
             title="Meld je aan"
             body="Vul het korte formulier in met je naam, e-mailadres en adres in Sambeek."
           />
           <Step
             num="2"
+            tone="coral"
             title="Bevestig per mail"
             body="Je ontvangt direct een bevestigingsmail. Klik op de link om je pin op de kaart te zetten."
           />
           <Step
             num="3"
+            tone="yellow"
             title="Zet alles klaar"
             body="Op de dag zelf zorg je ervoor dat je om 10:00 uur klaar zit met je spulletjes. Bezoekers vinden je via de kaart en kunnen een route langs meerdere garages samenstellen. Versier je oprit extra feestelijk om meer bezoekers te trekken!"
           />
@@ -149,14 +152,24 @@ function Step({
   num,
   title,
   body,
+  tone = "blue",
 }: {
   num: string;
   title: string;
   body: string;
+  tone?: "blue" | "coral" | "yellow";
 }) {
+  const toneClass =
+    tone === "coral"
+      ? "bg-coral-400 text-white"
+      : tone === "yellow"
+        ? "bg-accent-300 text-brand-800"
+        : "bg-brand-700 text-white";
   return (
     <div className="space-y-3">
-      <div className="w-14 h-14 rounded-2xl bg-brand-700 text-white font-bold text-2xl flex items-center justify-center">
+      <div
+        className={`w-14 h-14 rounded-2xl font-bold text-2xl flex items-center justify-center ${toneClass}`}
+      >
         {num}
       </div>
       <h3 className="text-xl font-bold text-brand-800">{title}</h3>

@@ -20,6 +20,12 @@
   --color-accent-400: #f9c22e;
   --color-accent-500: #e5a800;
 
+  /* Koraal — derde accent */
+  --color-coral-100: #ffe2db;
+  --color-coral-300: #ffa493;
+  --color-coral-400: #f47b68;
+  --color-coral-500: #de5a45;
+
   --color-cream: #fbf7ec;
   --color-ink: #0b1a36;
   --color-paper: #ffffff;
@@ -40,7 +46,7 @@
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 3px;
-    text-decoration-color: var(--color-accent-400);
+    text-decoration-color: var(--color-coral-400);
   }
 
   :where(a:not([class*="text-"])):hover {

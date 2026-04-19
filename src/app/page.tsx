@@ -139,7 +139,10 @@ export default async function HomePage() {
 
 function ShelfIllustration() {
   return (
-    <div className="rounded-3xl overflow-hidden bg-[#fdf1c6]">
+    <div
+      className="w-screen"
+      style={{ marginLeft: "calc(50% - 50vw)" }}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/illustraties/garage-schap.png"

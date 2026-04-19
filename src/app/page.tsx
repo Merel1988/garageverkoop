@@ -157,7 +157,7 @@ function Sparkles() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 -z-10 pointer-events-none overflow-hidden"
+      className="absolute inset-0 pointer-events-none overflow-hidden"
     >
       <Sparkle className="top-0 left-[6%] w-5 text-accent-400 rotate-12" />
       <Sparkle className="top-10 left-[22%] w-3 text-coral-400 -rotate-6" />

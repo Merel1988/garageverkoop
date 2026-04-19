@@ -68,3 +68,10 @@
 .leaflet-container a.leaflet-popup-close-button {
   color: var(--color-ink);
 }
+
+/* Eigen divIcon pin — Leaflet zet een witte achtergrond op .leaflet-div-icon,
+   die willen we niet */
+.gv-pin {
+  background: transparent;
+  border: none;
+}

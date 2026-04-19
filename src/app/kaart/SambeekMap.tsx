@@ -7,14 +7,16 @@ import "leaflet/dist/leaflet.css";
 import { SAMBEEK_CENTER, DEFAULT_ZOOM } from "@/lib/event";
 import type { RegistrationPin } from "./types";
 
-// Leaflet's default marker icon URLs are broken under bundlers — serve them
-// from /public/leaflet/ instead.
-delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })
-  ._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: "/leaflet/marker-icon.png",
-  iconRetinaUrl: "/leaflet/marker-icon-2x.png",
-  shadowUrl: "/leaflet/marker-shadow.png",
+const pinIcon = L.divIcon({
+  className: "gv-pin",
+  html: `<svg width="32" height="42" viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16 1C7.72 1 1 7.72 1 16c0 10.5 15 25 15 25s15-14.5 15-25c0-8.28-6.72-15-15-15z"
+      fill="#f47b68" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="16" cy="16" r="5" fill="#ffffff"/>
+  </svg>`,
+  iconSize: [32, 42],
+  iconAnchor: [16, 41],
+  popupAnchor: [0, -38],
 });
 
 export default function SambeekMap({
@@ -74,7 +76,11 @@ export default function SambeekMap({
             const isSelected = selected.includes(r.id);
             const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${r.latitude},${r.longitude}`;
             return (
-              <Marker key={r.id} position={[r.latitude, r.longitude]}>
+              <Marker
+                key={r.id}
+                position={[r.latitude, r.longitude]}
+                icon={pinIcon}
+              >
                 <Popup>
                   <div className="text-sm space-y-2 min-w-[200px]">
                     <div className="font-semibold text-brand-800">
@@ -84,7 +90,8 @@ export default function SambeekMap({
                       href={navUrl}
                       target="_blank"
                       rel="noopener"
-                      className="inline-block bg-brand-700 text-white font-semibold px-3 py-1.5 rounded-full no-underline"
+                      style={{ color: "#ffffff" }}
+                      className="inline-block bg-brand-700 hover:bg-brand-800 font-semibold px-3 py-1.5 rounded-full no-underline"
                     >
                       Navigeer hiernaartoe
                     </a>

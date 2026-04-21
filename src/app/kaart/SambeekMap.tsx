@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { SAMBEEK_CENTER, DEFAULT_ZOOM } from "@/lib/event";
+import { SAMBEEK_CENTER, MAP_ZOOM } from "@/lib/event";
 import type { RegistrationPin } from "./types";
 
 const pinIcon = L.divIcon({
@@ -64,7 +64,7 @@ export default function SambeekMap({
       <div className="h-[70vh] min-h-[380px] rounded-3xl overflow-hidden">
         <MapContainer
           center={SAMBEEK_CENTER}
-          zoom={DEFAULT_ZOOM}
+          zoom={MAP_ZOOM}
           scrollWheelZoom
           style={{ height: "100%", width: "100%" }}
         >

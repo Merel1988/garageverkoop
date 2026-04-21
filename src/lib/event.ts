@@ -1,5 +1,6 @@
 export const SAMBEEK_CENTER: [number, number] = [51.6357, 5.9658];
 export const DEFAULT_ZOOM = 15;
+export const MAP_ZOOM = 16;
 
 export function eventDate(): Date | null {
   const raw = process.env.EVENT_DATE;

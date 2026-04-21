@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  Tooltip,
+  useMap,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { SAMBEEK_CENTER, DEFAULT_ZOOM } from "@/lib/event";
@@ -23,10 +29,31 @@ export default function PrintMap({ pins }: { pins: NumberedPin[] }) {
   return (
     <>
       <style>{`
+        .gv-print-label {
+          background: rgba(255, 255, 255, 0.92);
+          border: 1px solid #092955;
+          color: #092955;
+          font-weight: 600;
+          font-size: 10px;
+          padding: 1px 5px;
+          border-radius: 6px;
+          white-space: nowrap;
+          box-shadow: none;
+        }
+        .gv-print-label::before {
+          display: none !important;
+        }
         @media print {
           .leaflet-interactive {
             fill: #ffd558 !important;
             stroke: #092955 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+          .gv-print-label {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border-color: #000000 !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
@@ -40,8 +67,8 @@ export default function PrintMap({ pins }: { pins: NumberedPin[] }) {
           center={SAMBEEK_CENTER}
           zoom={DEFAULT_ZOOM}
           scrollWheelZoom={false}
-          style={{ height: "420px", width: "100%" }}
-          className="print:!h-[380px]"
+          style={{ height: "70vh", width: "100%" }}
+          className="print:!h-[90vh]"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -51,14 +78,23 @@ export default function PrintMap({ pins }: { pins: NumberedPin[] }) {
             <CircleMarker
               key={p.id}
               center={[p.latitude, p.longitude]}
-              radius={9}
+              radius={7}
               pathOptions={{
                 color: "#092955",
                 weight: 2,
                 fillColor: "#ffd558",
                 fillOpacity: 1,
               }}
-            />
+            >
+              <Tooltip
+                permanent
+                direction="right"
+                offset={[8, 0]}
+                className="gv-print-label"
+              >
+                {p.street} {p.houseNumber}
+              </Tooltip>
+            </CircleMarker>
           ))}
           <FitToPins pins={pins} />
         </MapContainer>

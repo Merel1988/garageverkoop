@@ -17,14 +17,22 @@ export default async function AdminPage() {
     <div className="space-y-6">
       <div className="flex items-baseline justify-between flex-wrap gap-2">
         <h1 className="text-3xl font-bold text-brand-700">Admin</h1>
-        <form method="POST" action="/api/admin/logout">
-          <button
-            type="submit"
+        <div className="flex items-baseline gap-4">
+          <a
+            href="/api/admin/export"
             className="text-sm text-brand-700 hover:underline"
           >
-            Uitloggen
-          </button>
-        </form>
+            Download CSV
+          </a>
+          <form method="POST" action="/api/admin/logout">
+            <button
+              type="submit"
+              className="text-sm text-brand-700 hover:underline"
+            >
+              Uitloggen
+            </button>
+          </form>
+        </div>
       </div>
 
       <section>

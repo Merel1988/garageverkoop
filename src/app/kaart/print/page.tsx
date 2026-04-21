@@ -61,20 +61,7 @@ export default async function PrintPage() {
           Nog geen bevestigde aanmeldingen.
         </p>
       ) : (
-        <>
-          <PrintMapClient pins={numbered} />
-
-          <ul className="print:columns-2 print:gap-8 space-y-1 break-before-auto">
-            {numbered.map((r) => (
-              <li
-                key={r.id}
-                className="text-base print:text-sm break-inside-avoid text-ink print:text-black"
-              >
-                <span className="font-medium">{r.street}</span> {r.houseNumber}
-              </li>
-            ))}
-          </ul>
-        </>
+        <PrintMapClient pins={numbered} />
       )}
     </div>
   );

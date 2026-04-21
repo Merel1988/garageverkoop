@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import { MapContainer, TileLayer, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -14,26 +15,28 @@ function FitToPins({ pins }: { pins: NumberedPin[] }) {
     const bounds = L.latLngBounds(
       pins.map((p) => [p.latitude, p.longitude] as [number, number]),
     );
-    const fit = () =>
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 17 });
+    const fit = () => {
+      map.invalidateSize({ animate: false });
+      map.fitBounds(bounds, {
+        padding: [40, 40],
+        maxZoom: 17,
+        animate: false,
+      });
+    };
     fit();
-    map.on("resize", fit);
-    // Print preview resizes the window — invalidate Leaflet's cached size so
-    // fitBounds sees the actual print viewport, then refit.
-    const beforePrint = () => {
-      map.invalidateSize();
-      fit();
-    };
-    const afterPrint = () => {
-      map.invalidateSize();
-      fit();
-    };
-    window.addEventListener("beforeprint", beforePrint);
-    window.addEventListener("afterprint", afterPrint);
+    // ResizeObserver catches any container size change — including print CSS
+    // shrinking the viewport — regardless of whether the window also resizes.
+    const ro = new ResizeObserver(() => fit());
+    ro.observe(map.getContainer());
+    // matchMedia('print') fires AFTER print CSS has been applied, which is
+    // the only moment the container has its real print dimensions in every
+    // browser. beforeprint fires too early in Firefox.
+    const mql = window.matchMedia("print");
+    const onChange = () => fit();
+    mql.addEventListener("change", onChange);
     return () => {
-      map.off("resize", fit);
-      window.removeEventListener("beforeprint", beforePrint);
-      window.removeEventListener("afterprint", afterPrint);
+      ro.disconnect();
+      mql.removeEventListener("change", onChange);
     };
   }, [map, pins]);
   return null;
@@ -192,14 +195,27 @@ function LabelLayer({ pins }: { pins: NumberedPin[] }) {
       setLabels(placed);
     }
 
+    function relayoutSync() {
+      flushSync(() => relayout());
+    }
+
     relayout();
     map.on("zoomend", relayout);
     map.on("moveend", relayout);
     map.on("resize", relayout);
+
+    // Force a synchronous label re-layout + render when print CSS kicks in,
+    // so the browser's print snapshot sees the freshly placed labels rather
+    // than the screen-sized ones that React would otherwise commit on the
+    // next tick.
+    const mql = window.matchMedia("print");
+    mql.addEventListener("change", relayoutSync);
+
     return () => {
       map.off("zoomend", relayout);
       map.off("moveend", relayout);
       map.off("resize", relayout);
+      mql.removeEventListener("change", relayoutSync);
     };
   }, [map, pins]);
 

@@ -39,17 +39,17 @@ export default async function PrintPage() {
   const time = eventTimeRange();
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 print:space-y-3">
-      <header className="space-y-1 print:space-y-0">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-800 print:text-black print:text-2xl">
+    <div className="max-w-4xl mx-auto space-y-6 print:space-y-2 print:max-w-none print:h-screen print:flex print:flex-col">
+      <header className="space-y-1 print:space-y-0 print:shrink-0">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-800 print:text-black print:text-lg">
           Garageverkoop Sambeek
         </h1>
-        <p className="text-gray-700 print:text-black">
+        <p className="text-gray-700 print:text-black print:text-xs">
           {date && formatEventDate(date)}
           {date && time ? " · " : ""}
           {time}
         </p>
-        <p className="text-sm text-gray-600 print:text-black">
+        <p className="text-sm text-gray-600 print:text-black print:text-xs">
           {numbered.length} deelnemende huizen
         </p>
       </header>
@@ -61,7 +61,9 @@ export default async function PrintPage() {
           Nog geen bevestigde aanmeldingen.
         </p>
       ) : (
-        <PrintMapClient pins={numbered} />
+        <div className="print:flex-1 print:min-h-0">
+          <PrintMapClient pins={numbered} />
+        </div>
       )}
     </div>
   );

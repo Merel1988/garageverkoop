@@ -48,7 +48,7 @@ export default function RootLayout({
           </div>
           <div className="h-[3px] bg-accent-400" />
         </header>
-        <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 print:max-w-none print:p-0">
           {children}
         </main>
         <footer className="mt-12 bg-brand-900 text-white/80 print:hidden">

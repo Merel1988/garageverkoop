@@ -262,6 +262,8 @@ export default function PrintMap({ pins }: { pins: NumberedPin[] }) {
           text-align: center;
         }
         @media print {
+          @page { size: A4 portrait; margin: 10mm; }
+          html, body { height: auto !important; }
           .leaflet-interactive {
             fill: #ffd558 !important;
             stroke: #092955 !important;
@@ -275,18 +277,19 @@ export default function PrintMap({ pins }: { pins: NumberedPin[] }) {
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
-          .leaflet-control-zoom {
+          .leaflet-control-zoom,
+          .leaflet-control-attribution {
             display: none !important;
           }
         }
       `}</style>
-      <div className="rounded-2xl overflow-hidden print:rounded-none relative">
+      <div className="rounded-2xl overflow-hidden print:rounded-none relative print:h-full">
         <MapContainer
           center={SAMBEEK_CENTER}
           zoom={DEFAULT_ZOOM}
           scrollWheelZoom={false}
           style={{ height: "75vh", width: "100%" }}
-          className="print:!h-[90vh]"
+          className="print:!h-full"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

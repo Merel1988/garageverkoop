@@ -87,10 +87,8 @@ function LabelLayer({ pins }: { pins: NumberedPin[] }) {
         y: number,
         w: number,
         h: number,
-        selfId: string,
       ) => {
         for (const other of pts) {
-          if (other.id === selfId) continue;
           if (
             other.pinX > x - PIN_CLEAR &&
             other.pinX < x + w + PIN_CLEAR &&
@@ -102,20 +100,38 @@ function LabelLayer({ pins }: { pins: NumberedPin[] }) {
         return false;
       };
 
-      for (const p of order) {
-        const startsX = [p.pinX + OFFSET, p.pinX - OFFSET - p.width];
-        let chosen: Placed | null = null;
+      const clampX = (x: number, w: number) =>
+        Math.max(2, Math.min(W - w - 2, x));
 
-        for (const startX of startsX) {
-          const x = Math.max(2, Math.min(W - p.width - 2, startX));
-          let y = p.pinY - LABEL_H / 2;
-          let tries = 0;
-          while (tries < 80) {
+      for (const p of order) {
+        // Direction seeds: right, left, below, above. For right/left we let
+        // the push-down loop walk y until a slot is free; for below/above we
+        // walk away from the pin so labels don't slide back over it.
+        const seeds: Array<{ x: number; y: number; dy: number }> = [
+          { x: p.pinX + OFFSET, y: p.pinY - LABEL_H / 2, dy: LABEL_H + GAP },
+          {
+            x: p.pinX - OFFSET - p.width,
+            y: p.pinY - LABEL_H / 2,
+            dy: LABEL_H + GAP,
+          },
+          { x: p.pinX - p.width / 2, y: p.pinY + OFFSET, dy: LABEL_H + GAP },
+          {
+            x: p.pinX - p.width / 2,
+            y: p.pinY - OFFSET - LABEL_H,
+            dy: -(LABEL_H + GAP),
+          },
+        ];
+
+        let chosen: Placed | null = null;
+        for (const seed of seeds) {
+          const x = clampX(seed.x, p.width);
+          let y = seed.y;
+          for (let tries = 0; tries < 60; tries++) {
             const outOfBounds = y < 2 || y + LABEL_H > H - 2;
             const bad =
               outOfBounds ||
               collidesWithPlaced(x, y, p.width, LABEL_H) ||
-              collidesWithPins(x, y, p.width, LABEL_H, p.id);
+              collidesWithPins(x, y, p.width, LABEL_H);
             if (!bad) {
               chosen = {
                 id: p.id,
@@ -129,19 +145,23 @@ function LabelLayer({ pins }: { pins: NumberedPin[] }) {
               };
               break;
             }
-            y += LABEL_H + GAP;
+            y += seed.dy;
           }
           if (chosen) break;
         }
 
         if (!chosen) {
+          // Last resort: place at bottom edge, shifted away from pin so it
+          // can't cover its own dot.
+          const fallbackY =
+            p.pinY > H / 2 ? 2 : Math.max(2, H - LABEL_H - 2);
           chosen = {
             id: p.id,
             text: p.text,
             pinX: p.pinX,
             pinY: p.pinY,
-            labelX: Math.max(2, Math.min(W - p.width - 2, p.pinX + OFFSET)),
-            labelY: Math.max(2, Math.min(H - LABEL_H - 2, p.pinY)),
+            labelX: clampX(p.pinX - p.width / 2, p.width),
+            labelY: fallbackY,
             width: p.width,
             height: LABEL_H,
           };

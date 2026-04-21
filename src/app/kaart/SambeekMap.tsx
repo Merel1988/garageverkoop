@@ -1,265 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { createPortal } from "react-dom";
-import {
-  MapContainer,
-  TileLayer,
-  CircleMarker,
-  Popup,
-  useMap,
-} from "react-leaflet";
+import { useMemo, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { SAMBEEK_CENTER, MAP_ZOOM } from "@/lib/event";
 import type { RegistrationPin } from "./types";
 
-function FitToPins({ pins }: { pins: RegistrationPin[] }) {
-  const map = useMap();
-  useEffect(() => {
-    if (pins.length === 0) return;
-    const bounds = L.latLngBounds(
-      pins.map((p) => [p.latitude, p.longitude] as [number, number]),
-    );
-    map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
-  }, [map, pins]);
-  return null;
-}
-
-type Placed = {
-  id: string;
-  text: string;
-  pinX: number;
-  pinY: number;
-  labelX: number;
-  labelY: number;
-  width: number;
-  height: number;
-};
-
-const LABEL_H = 16;
-const CHAR_W = 6.3;
-const PAD_X = 12;
-const GAP = 3;
-const PIN_CLEAR = 9;
-const OFFSET = 12;
-
-function LabelLayer({ pins }: { pins: RegistrationPin[] }) {
-  const map = useMap();
-  const [pane, setPane] = useState<HTMLElement | null>(null);
-  const [labels, setLabels] = useState<Placed[]>([]);
-
-  useEffect(() => {
-    let p = map.getPane("gv-labels");
-    if (!p) {
-      p = map.createPane("gv-labels");
-      p.style.zIndex = "620";
-      p.style.pointerEvents = "none";
-    }
-    setPane(p);
-  }, [map]);
-
-  useEffect(() => {
-    function relayout() {
-      const container = map.getContainer();
-      const W = container.clientWidth;
-      const H = container.clientHeight;
-      const nw = map.containerPointToLayerPoint([0, 0]);
-      const se = map.containerPointToLayerPoint([W, H]);
-      const minX = nw.x + 2;
-      const maxX = se.x - 2;
-      const minY = nw.y + 2;
-      const maxY = se.y - 2;
-
-      const pts = pins.map((p) => {
-        const pt = map.latLngToLayerPoint([p.latitude, p.longitude]);
-        const text = `${p.street} ${p.houseNumber}`;
-        return {
-          id: p.id,
-          text,
-          pinX: pt.x,
-          pinY: pt.y,
-          width: Math.ceil(text.length * CHAR_W) + PAD_X,
-        };
-      });
-
-      const order = [...pts].sort((a, b) => a.pinY - b.pinY);
-      const placed: Placed[] = [];
-
-      const collidesWithPlaced = (
-        x: number,
-        y: number,
-        w: number,
-        h: number,
-      ) => {
-        for (const pl of placed) {
-          if (
-            x < pl.labelX + pl.width + GAP &&
-            x + w + GAP > pl.labelX &&
-            y < pl.labelY + pl.height + GAP &&
-            y + h + GAP > pl.labelY
-          )
-            return true;
-        }
-        return false;
-      };
-
-      const collidesWithPins = (
-        x: number,
-        y: number,
-        w: number,
-        h: number,
-      ) => {
-        for (const other of pts) {
-          if (
-            other.pinX > x - PIN_CLEAR &&
-            other.pinX < x + w + PIN_CLEAR &&
-            other.pinY > y - PIN_CLEAR &&
-            other.pinY < y + h + PIN_CLEAR
-          )
-            return true;
-        }
-        return false;
-      };
-
-      const clampX = (x: number, w: number) =>
-        Math.max(minX, Math.min(maxX - w, x));
-
-      for (const p of order) {
-        const seeds: Array<{ x: number; y: number; dy: number }> = [
-          { x: p.pinX + OFFSET, y: p.pinY - LABEL_H / 2, dy: LABEL_H + GAP },
-          {
-            x: p.pinX - OFFSET - p.width,
-            y: p.pinY - LABEL_H / 2,
-            dy: LABEL_H + GAP,
-          },
-          { x: p.pinX - p.width / 2, y: p.pinY + OFFSET, dy: LABEL_H + GAP },
-          {
-            x: p.pinX - p.width / 2,
-            y: p.pinY - OFFSET - LABEL_H,
-            dy: -(LABEL_H + GAP),
-          },
-        ];
-
-        let chosen: Placed | null = null;
-        for (const seed of seeds) {
-          const x = clampX(seed.x, p.width);
-          let y = seed.y;
-          for (let tries = 0; tries < 60; tries++) {
-            const outOfBounds = y < minY || y + LABEL_H > maxY;
-            const bad =
-              outOfBounds ||
-              collidesWithPlaced(x, y, p.width, LABEL_H) ||
-              collidesWithPins(x, y, p.width, LABEL_H);
-            if (!bad) {
-              chosen = {
-                id: p.id,
-                text: p.text,
-                pinX: p.pinX,
-                pinY: p.pinY,
-                labelX: x,
-                labelY: y,
-                width: p.width,
-                height: LABEL_H,
-              };
-              break;
-            }
-            y += seed.dy;
-          }
-          if (chosen) break;
-        }
-
-        if (!chosen) {
-          const fallbackY =
-            p.pinY > (minY + maxY) / 2 ? minY : maxY - LABEL_H;
-          chosen = {
-            id: p.id,
-            text: p.text,
-            pinX: p.pinX,
-            pinY: p.pinY,
-            labelX: clampX(p.pinX - p.width / 2, p.width),
-            labelY: fallbackY,
-            width: p.width,
-            height: LABEL_H,
-          };
-        }
-        placed.push(chosen);
-      }
-
-      setLabels(placed);
-    }
-
-    relayout();
-    map.on("zoomend", relayout);
-    map.on("resize", relayout);
-    return () => {
-      map.off("zoomend", relayout);
-      map.off("resize", relayout);
-    };
-  }, [map, pins]);
-
-  if (!pane) return null;
-
-  return createPortal(
-    <>
-      <svg
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: 1,
-          height: 1,
-          overflow: "visible",
-        }}
-      >
-        {labels.map((l) => {
-          const cx = l.labelX + l.width / 2;
-          const cy = l.labelY + l.height / 2;
-          const anchorX =
-            l.pinX < l.labelX
-              ? l.labelX
-              : l.pinX > l.labelX + l.width
-                ? l.labelX + l.width
-                : cx;
-          const anchorY =
-            l.pinY < l.labelY
-              ? l.labelY
-              : l.pinY > l.labelY + l.height
-                ? l.labelY + l.height
-                : cy;
-          return (
-            <line
-              key={l.id}
-              x1={l.pinX}
-              y1={l.pinY}
-              x2={anchorX}
-              y2={anchorY}
-              stroke="#092955"
-              strokeWidth={1}
-            />
-          );
-        })}
-      </svg>
-      {labels.map((l) => (
-        <div
-          key={l.id}
-          className="gv-map-label"
-          style={{
-            position: "absolute",
-            left: l.labelX,
-            top: l.labelY,
-            width: l.width,
-            height: l.height,
-            lineHeight: `${l.height - 2}px`,
-          }}
-        >
-          {l.text}
-        </div>
-      ))}
-    </>,
-    pane,
-  );
-}
+const pinIcon = L.divIcon({
+  className: "gv-pin",
+  html: `<svg width="24" height="32" viewBox="0 0 32 42" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16 1C7.72 1 1 7.72 1 16c0 10.5 15 25 15 25s15-14.5 15-25c0-8.28-6.72-15-15-15z"
+      fill="#f47b68" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="16" cy="16" r="5" fill="#ffffff"/>
+  </svg>`,
+  iconSize: [24, 32],
+  iconAnchor: [12, 31],
+  popupAnchor: [0, -28],
+});
 
 export default function SambeekMap({
   registrations,
@@ -292,42 +50,8 @@ export default function SambeekMap({
 
   return (
     <div className="relative">
-      <style>{`
-        .gv-map-label {
-          box-sizing: border-box;
-          background: rgba(255, 255, 255, 0.95);
-          border: 1px solid #092955;
-          color: #092955;
-          font-weight: 600;
-          font-size: 10px;
-          padding: 0 5px;
-          border-radius: 4px;
-          white-space: nowrap;
-          text-align: center;
-        }
-        @media print {
-          .leaflet-interactive {
-            fill: #ffd558 !important;
-            stroke: #092955 !important;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
-          .gv-map-label {
-            background: #ffffff !important;
-            color: #000000 !important;
-            border-color: #000000 !important;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
-          .leaflet-control-zoom,
-          .leaflet-control-attribution {
-            display: none !important;
-          }
-        }
-      `}</style>
-
-      <div className="print:hidden flex flex-wrap items-center gap-3 mb-3 justify-end">
-        {registrations.length > 1 && (
+      {registrations.length > 1 && (
+        <div className="flex justify-end mb-3">
           <button
             type="button"
             onClick={toggleAll}
@@ -335,17 +59,9 @@ export default function SambeekMap({
           >
             {allSelected ? "Deselecteer alle" : "Selecteer alle huizen"}
           </button>
-        )}
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="bg-brand-700 hover:bg-brand-800 text-white font-semibold px-4 py-2 rounded-full text-sm transition-colors"
-        >
-          Print kaart
-        </button>
-      </div>
-
-      <div className="h-[70vh] min-h-[380px] rounded-3xl overflow-hidden print:rounded-none print:!h-[90vh]">
+        </div>
+      )}
+      <div className="h-[70vh] min-h-[380px] rounded-3xl overflow-hidden">
         <MapContainer
           center={SAMBEEK_CENTER}
           zoom={MAP_ZOOM}
@@ -360,16 +76,10 @@ export default function SambeekMap({
             const isSelected = selected.includes(r.id);
             const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${r.latitude},${r.longitude}`;
             return (
-              <CircleMarker
+              <Marker
                 key={r.id}
-                center={[r.latitude, r.longitude]}
-                radius={7}
-                pathOptions={{
-                  color: "#092955",
-                  weight: 2,
-                  fillColor: isSelected ? "#f47b68" : "#ffd558",
-                  fillOpacity: 1,
-                }}
+                position={[r.latitude, r.longitude]}
+                icon={pinIcon}
               >
                 <Popup>
                   <div className="text-sm space-y-2 min-w-[200px]">
@@ -396,16 +106,14 @@ export default function SambeekMap({
                     </label>
                   </div>
                 </Popup>
-              </CircleMarker>
+              </Marker>
             );
           })}
-          <FitToPins pins={registrations} />
-          <LabelLayer pins={registrations} />
         </MapContainer>
       </div>
 
       {selectedPins.length > 0 && routeUrls.length > 0 && (
-        <div className="fixed bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-0 flex justify-center z-[1000] pointer-events-none print:hidden">
+        <div className="fixed bottom-3 sm:bottom-4 inset-x-3 sm:inset-x-0 flex justify-center z-[1000] pointer-events-none">
           <div className="pointer-events-auto bg-white ring-1 ring-brand-100 shadow-xl rounded-2xl px-3 py-2 flex flex-wrap items-center gap-2 max-w-[min(100%,40rem)]">
             <span className="text-sm font-semibold text-brand-800 whitespace-nowrap">
               {selectedPins.length}{" "}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   MapContainer,
   TileLayer,
@@ -45,18 +46,33 @@ const OFFSET = 12;
 
 function LabelLayer({ pins }: { pins: RegistrationPin[] }) {
   const map = useMap();
+  const [pane, setPane] = useState<HTMLElement | null>(null);
   const [labels, setLabels] = useState<Placed[]>([]);
-  const [size, setSize] = useState({ w: 0, h: 0 });
+
+  useEffect(() => {
+    let p = map.getPane("gv-labels");
+    if (!p) {
+      p = map.createPane("gv-labels");
+      p.style.zIndex = "620";
+      p.style.pointerEvents = "none";
+    }
+    setPane(p);
+  }, [map]);
 
   useEffect(() => {
     function relayout() {
       const container = map.getContainer();
       const W = container.clientWidth;
       const H = container.clientHeight;
-      setSize({ w: W, h: H });
+      const nw = map.containerPointToLayerPoint([0, 0]);
+      const se = map.containerPointToLayerPoint([W, H]);
+      const minX = nw.x + 2;
+      const maxX = se.x - 2;
+      const minY = nw.y + 2;
+      const maxY = se.y - 2;
 
       const pts = pins.map((p) => {
-        const pt = map.latLngToContainerPoint([p.latitude, p.longitude]);
+        const pt = map.latLngToLayerPoint([p.latitude, p.longitude]);
         const text = `${p.street} ${p.houseNumber}`;
         return {
           id: p.id,
@@ -107,7 +123,7 @@ function LabelLayer({ pins }: { pins: RegistrationPin[] }) {
       };
 
       const clampX = (x: number, w: number) =>
-        Math.max(2, Math.min(W - w - 2, x));
+        Math.max(minX, Math.min(maxX - w, x));
 
       for (const p of order) {
         const seeds: Array<{ x: number; y: number; dy: number }> = [
@@ -130,7 +146,7 @@ function LabelLayer({ pins }: { pins: RegistrationPin[] }) {
           const x = clampX(seed.x, p.width);
           let y = seed.y;
           for (let tries = 0; tries < 60; tries++) {
-            const outOfBounds = y < 2 || y + LABEL_H > H - 2;
+            const outOfBounds = y < minY || y + LABEL_H > maxY;
             const bad =
               outOfBounds ||
               collidesWithPlaced(x, y, p.width, LABEL_H) ||
@@ -155,7 +171,7 @@ function LabelLayer({ pins }: { pins: RegistrationPin[] }) {
 
         if (!chosen) {
           const fallbackY =
-            p.pinY > H / 2 ? 2 : Math.max(2, H - LABEL_H - 2);
+            p.pinY > (minY + maxY) / 2 ? minY : maxY - LABEL_H;
           chosen = {
             id: p.id,
             text: p.text,
@@ -175,28 +191,26 @@ function LabelLayer({ pins }: { pins: RegistrationPin[] }) {
 
     relayout();
     map.on("zoomend", relayout);
-    map.on("moveend", relayout);
     map.on("resize", relayout);
     return () => {
       map.off("zoomend", relayout);
-      map.off("moveend", relayout);
       map.off("resize", relayout);
     };
   }, [map, pins]);
 
-  return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        pointerEvents: "none",
-        zIndex: 650,
-      }}
-    >
+  if (!pane) return null;
+
+  return createPortal(
+    <>
       <svg
-        width={size.w}
-        height={size.h}
-        style={{ position: "absolute", top: 0, left: 0 }}
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: 1,
+          height: 1,
+          overflow: "visible",
+        }}
       >
         {labels.map((l) => {
           const cx = l.labelX + l.width / 2;
@@ -242,7 +256,8 @@ function LabelLayer({ pins }: { pins: RegistrationPin[] }) {
           {l.text}
         </div>
       ))}
-    </div>
+    </>,
+    pane,
   );
 }
 

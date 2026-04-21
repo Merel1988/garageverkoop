@@ -50,7 +50,7 @@ export default async function PrintPage() {
           {time}
         </p>
         <p className="text-sm text-gray-600 print:text-black print:text-xs">
-          {numbered.length} deelnemende huizen
+          {numbered.length} deelnemende adressen
         </p>
       </header>
 

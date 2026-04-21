@@ -57,7 +57,7 @@ export default function SambeekMap({
             onClick={toggleAll}
             className="bg-accent-300 hover:bg-accent-400 text-brand-800 font-semibold px-4 py-2 rounded-full text-sm transition-colors"
           >
-            {allSelected ? "Deselecteer alle" : "Selecteer alle huizen"}
+            {allSelected ? "Deselecteer alle" : "Selecteer alle adressen"}
           </button>
         </div>
       )}

@@ -27,7 +27,7 @@ export default async function KaartPage() {
           </h1>
           <p className="text-gray-700 leading-relaxed">
             {registrations.length}{" "}
-            {registrations.length === 1 ? "huis doet mee" : "huizen doen mee"}.
+            {registrations.length === 1 ? "adres doet mee" : "adressen doen mee"}.
             Klik op een pin voor de routebeschrijving, of vink meerdere pins aan
             om een wandelroute langs verschillende garages samen te stellen.
           </p>

@@ -13,7 +13,7 @@ export default function AanmeldenPage() {
         </h1>
         <p className="text-gray-700">
           De termijn om je huis aan te melden is voorbij. Bekijk de{" "}
-          <Link href="/kaart">kaart</Link> om te zien welke huizen meedoen.
+          <Link href="/kaart">kaart</Link> om te zien welke adressen meedoen.
         </p>
       </div>
     );

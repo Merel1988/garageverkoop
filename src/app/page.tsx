@@ -38,7 +38,7 @@ export default async function HomePage() {
             <span className="text-brand-500">Sambeek</span>
           </h1>
           <p className="text-lg text-gray-700 max-w-2xl leading-relaxed">
-            {registrations.length} deelnemende huizen staan op de kaart. Klik op
+            {registrations.length} deelnemende adressen staan op de kaart. Klik op
             een pin om te navigeren of vink meerdere aan voor een wandelroute.
           </p>
         </section>
@@ -120,9 +120,9 @@ export default async function HomePage() {
           Toch afmelden?
         </h2>
         <p className="text-gray-800 leading-relaxed">
-          Geen probleem. Onderaan iedere mail die je van ons ontvangt staat een
-          persoonlijke afmeldlink. Daarmee verdwijnt je pin direct van de kaart
-          en worden je gegevens verwijderd.
+          Geen probleem. Onderaan de aanmeldingsmail staat een persoonlijke
+          afmeldlink. Daarmee verdwijnt je pin direct van de kaart en worden je
+          gegevens verwijderd.
         </p>
       </section>
 

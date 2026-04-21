@@ -14,7 +14,27 @@ function FitToPins({ pins }: { pins: NumberedPin[] }) {
     const bounds = L.latLngBounds(
       pins.map((p) => [p.latitude, p.longitude] as [number, number]),
     );
-    map.fitBounds(bounds, { padding: [60, 60], maxZoom: 17 });
+    const fit = () =>
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 17 });
+    fit();
+    map.on("resize", fit);
+    // Print preview resizes the window — invalidate Leaflet's cached size so
+    // fitBounds sees the actual print viewport, then refit.
+    const beforePrint = () => {
+      map.invalidateSize();
+      fit();
+    };
+    const afterPrint = () => {
+      map.invalidateSize();
+      fit();
+    };
+    window.addEventListener("beforeprint", beforePrint);
+    window.addEventListener("afterprint", afterPrint);
+    return () => {
+      map.off("resize", fit);
+      window.removeEventListener("beforeprint", beforePrint);
+      window.removeEventListener("afterprint", afterPrint);
+    };
   }, [map, pins]);
   return null;
 }

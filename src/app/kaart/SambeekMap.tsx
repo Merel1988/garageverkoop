@@ -73,13 +73,50 @@ export default function SambeekMap({
     );
   }
 
-  const orderedPins = useMemo(() => orderForWalking(selectedPins), [selectedPins]);
+  const [userLocation, setUserLocation] = useState<Coord | null>(null);
+  const [locating, setLocating] = useState(false);
+
+  const orderedPins = useMemo(
+    () => orderForWalking(selectedPins, userLocation ?? undefined),
+    [selectedPins, userLocation],
+  );
   const routeUrls = buildRouteUrls(orderedPins);
   const allSelected =
     registrations.length > 0 && selected.length === registrations.length;
 
   function toggleAll() {
     setSelected(allSelected ? [] : registrations.map((r) => r.id));
+  }
+
+  function openRoute(index: number) {
+    if (userLocation || !navigator.geolocation) {
+      window.open(routeUrls[index], "_blank", "noopener");
+      return;
+    }
+    // Open placeholder synchronously so popup blockers don't kick in after
+    // the async geolocation prompt resolves.
+    const target = window.open("about:blank", "_blank");
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const loc: Coord = {
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+        };
+        const fresh = buildRouteUrls(orderForWalking(selectedPins, loc));
+        setUserLocation(loc);
+        setLocating(false);
+        const url = fresh[index] ?? fresh[0];
+        if (target) target.location.href = url;
+        else window.open(url, "_blank", "noopener");
+      },
+      () => {
+        setLocating(false);
+        if (target) target.location.href = routeUrls[index];
+        else window.open(routeUrls[index], "_blank", "noopener");
+      },
+      { timeout: 8000, maximumAge: 60_000 },
+    );
   }
 
   return (
@@ -157,17 +194,21 @@ export default function SambeekMap({
               {selectedPins.length}{" "}
               {selectedPins.length === 1 ? "garage" : "garages"} gekozen
             </span>
-            {routeUrls.map((url, i) => (
-              <a
+            {routeUrls.map((_url, i) => (
+              <button
                 key={i}
-                href={url}
-                target="_blank"
-                rel="noopener"
+                type="button"
+                disabled={locating}
+                onClick={() => openRoute(i)}
                 style={{ color: "#ffffff" }}
-                className="no-underline bg-brand-700 hover:bg-brand-800 font-semibold px-3.5 py-1.5 rounded-full text-sm whitespace-nowrap"
+                className="bg-brand-700 hover:bg-brand-800 disabled:opacity-70 disabled:cursor-wait font-semibold px-3.5 py-1.5 rounded-full text-sm whitespace-nowrap"
               >
-                {routeUrls.length === 1 ? "Open route" : `Route ${i + 1}`}
-              </a>
+                {locating
+                  ? "Locatie ophalen..."
+                  : routeUrls.length === 1
+                    ? "Open route"
+                    : `Route ${i + 1}`}
+              </button>
             ))}
             <button
               type="button"
@@ -203,13 +244,35 @@ function distSq(a: Coord, b: Coord): number {
   return dlat * dlat + dlng * dlng;
 }
 
-// Reorder selected pins for a sensible walking route. Starts at the
-// westernmost pin and greedily walks to the nearest unvisited pin
-// (nearest-neighbor heuristic). For a small village this produces a
-// route that visits clusters together instead of zig-zagging.
-function orderForWalking<T extends Coord & { id: string }>(pins: T[]): T[] {
-  if (pins.length <= 2) return pins;
-  const start = pins.reduce((a, b) => (a.longitude <= b.longitude ? a : b));
+// Reorder selected pins for a sensible walking route. Starts at the pin
+// closest to `origin` if provided (e.g. user's GPS location), otherwise
+// at the westernmost pin so the route is deterministic. From there the
+// route greedily walks to the nearest unvisited pin (nearest-neighbor).
+function orderForWalking<T extends Coord & { id: string }>(
+  pins: T[],
+  origin?: Coord,
+): T[] {
+  if (pins.length <= 1) return pins;
+  let startIdx = 0;
+  if (origin) {
+    let best = distSq(origin, pins[0]);
+    for (let i = 1; i < pins.length; i++) {
+      const d = distSq(origin, pins[i]);
+      if (d < best) {
+        best = d;
+        startIdx = i;
+      }
+    }
+  } else {
+    let bestLng = pins[0].longitude;
+    for (let i = 1; i < pins.length; i++) {
+      if (pins[i].longitude < bestLng) {
+        bestLng = pins[i].longitude;
+        startIdx = i;
+      }
+    }
+  }
+  const start = pins[startIdx];
   const remaining = pins.filter((p) => p.id !== start.id);
   const route: T[] = [start];
   while (remaining.length > 0) {

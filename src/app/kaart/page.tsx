@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { MapClient } from "./MapClient";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Kaart met deelnemers",
+  description:
+    "Bekijk alle deelnemende adressen van de garageverkoop in Sambeek op de kaart. Klik op een pin om er heen te navigeren of stel een eigen wandelroute samen.",
+  alternates: { canonical: "/kaart" },
+};
 
 export default async function KaartPage() {
   const registrations = await prisma.registration.findMany({

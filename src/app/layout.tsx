@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { registrationsOpen } from "@/lib/event";
+import { SITE_URL } from "@/lib/site";
 import { SiteNav } from "./SiteNav";
 
 const inter = Inter({
@@ -11,10 +12,30 @@ const inter = Inter({
   display: "swap",
 });
 
+const SITE_DESCRIPTION =
+  "Sambeek verandert op 1e pinksterdag in één grote markt: bewoners stellen hun garages open voor een grootschalige garageverkoop. Bekijk de deelnemende adressen op de kaart of meld je aan om zelf mee te doen.";
+
 export const metadata: Metadata = {
-  title: "Garageverkoop Sambeek",
-  description:
-    "Meld je huis aan voor de garageverkoop in Sambeek en/of ontdek welke garages op de kaart staan.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Garageverkoop Sambeek",
+    template: "%s — Garageverkoop Sambeek",
+  },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "nl_NL",
+    url: "/",
+    siteName: "Garageverkoop Sambeek",
+    title: "Garageverkoop Sambeek",
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: "Garageverkoop Sambeek",
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { registrationsOpen } from "@/lib/event";
 import { RegistrationForm } from "./RegistrationForm";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Aanmelden",
+  description:
+    "Vul het formulier in om je huis aan te melden voor de garageverkoop in Sambeek. Na bevestiging per mail verschijnt je pin op de kaart.",
+  alternates: { canonical: "/aanmelden" },
+};
 
 export default function AanmeldenPage() {
   if (!registrationsOpen()) {

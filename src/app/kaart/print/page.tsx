@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Printversie · Garageverkoop Sambeek",
+  robots: { index: false, follow: false },
 };
 
 export default async function PrintPage() {

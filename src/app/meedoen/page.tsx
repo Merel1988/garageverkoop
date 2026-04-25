@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   eventDate,
@@ -7,6 +8,19 @@ import {
 } from "@/lib/event";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Meedoen als deelnemer",
+  description:
+    "Doe mee aan de garageverkoop in Sambeek. Meld je huis aan, geef je oude spullen een tweede leven en ontdek hoe je je pin op de kaart krijgt.",
+  alternates: { canonical: "/meedoen" },
+  openGraph: {
+    title: "Meedoen als deelnemer — Garageverkoop Sambeek",
+    description:
+      "Meld je huis aan voor de garageverkoop in Sambeek en zet je pin op de kaart.",
+    url: "/meedoen",
+  },
+};
 
 export default function MeedoenPage() {
   const date = eventDate();

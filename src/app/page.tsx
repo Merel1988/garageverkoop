@@ -143,8 +143,8 @@ function ShelfIllustration() {
     <div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/illustraties/garage-schap.png"
-        alt="Plank met tweedehands spullen — boeken, theepot, lamp, knuffelbeer, bloem en lijstje — met prijskaartjes erbij"
+        src="/illustraties/tafel.svg"
+        alt="Tafel met tweedehands spullen — boeken, theepot, lamp, knuffelbeer, bloem en lijstje — met prijskaartjes erbij"
         className="w-full h-auto block"
       />
     </div>

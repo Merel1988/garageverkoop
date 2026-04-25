@@ -1,11 +1,42 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useEffect, useMemo, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { SAMBEEK_CENTER, MAP_ZOOM } from "@/lib/event";
 import type { RegistrationPin } from "./types";
+
+function FitToPins({ registrations }: { registrations: RegistrationPin[] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (registrations.length === 0) return;
+    if (registrations.length === 1) {
+      const r = registrations[0];
+      map.setView([r.latitude, r.longitude], MAP_ZOOM);
+      return;
+    }
+    const bounds = L.latLngBounds(
+      registrations.map((r) => [r.latitude, r.longitude] as [number, number]),
+    );
+    map.fitBounds(bounds, { padding: [40, 40], maxZoom: MAP_ZOOM });
+  }, [map, registrations]);
+
+  useEffect(() => {
+    const handler = () => {
+      if (registrations.length < 2) return;
+      const bounds = L.latLngBounds(
+        registrations.map((r) => [r.latitude, r.longitude] as [number, number]),
+      );
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: MAP_ZOOM });
+    };
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [map, registrations]);
+
+  return null;
+}
 
 const pinIcon = L.divIcon({
   className: "gv-pin",
@@ -72,6 +103,7 @@ export default function SambeekMap({
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+          <FitToPins registrations={registrations} />
           {registrations.map((r) => {
             const isSelected = selected.includes(r.id);
             const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${r.latitude},${r.longitude}`;

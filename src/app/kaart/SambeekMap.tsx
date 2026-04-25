@@ -89,11 +89,7 @@ export default function SambeekMap({
   }
 
   function navigateTo(url: string) {
-    // Try a new tab first; if the popup blocker rejects (common on mobile
-    // after an async geolocation prompt), fall back to navigating the
-    // current tab so the user always ends up in Google Maps.
-    const win = window.open(url, "_blank", "noopener");
-    if (!win) window.location.href = url;
+    window.open(url, "_blank");
   }
 
   function openRoute(index: number) {

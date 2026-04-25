@@ -20,7 +20,7 @@ function FitToPins({ registrations }: { registrations: RegistrationPin[] }) {
     const bounds = L.latLngBounds(
       registrations.map((r) => [r.latitude, r.longitude] as [number, number]),
     );
-    map.fitBounds(bounds, { padding: [40, 40], maxZoom: MAP_ZOOM });
+    map.fitBounds(bounds, { padding: [10, 10], maxZoom: MAP_ZOOM });
   }, [map, registrations]);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function FitToPins({ registrations }: { registrations: RegistrationPin[] }) {
       const bounds = L.latLngBounds(
         registrations.map((r) => [r.latitude, r.longitude] as [number, number]),
       );
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: MAP_ZOOM });
+      map.fitBounds(bounds, { padding: [10, 10], maxZoom: MAP_ZOOM });
     };
     window.addEventListener("resize", handler);
     return () => window.removeEventListener("resize", handler);

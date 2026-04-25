@@ -88,14 +88,19 @@ export default function SambeekMap({
     setSelected(allSelected ? [] : registrations.map((r) => r.id));
   }
 
+  function navigateTo(url: string) {
+    // Try a new tab first; if the popup blocker rejects (common on mobile
+    // after an async geolocation prompt), fall back to navigating the
+    // current tab so the user always ends up in Google Maps.
+    const win = window.open(url, "_blank", "noopener");
+    if (!win) window.location.href = url;
+  }
+
   function openRoute(index: number) {
     if (userLocation || !navigator.geolocation) {
-      window.open(routeUrls[index], "_blank", "noopener");
+      navigateTo(routeUrls[index]);
       return;
     }
-    // Open placeholder synchronously so popup blockers don't kick in after
-    // the async geolocation prompt resolves.
-    const target = window.open("about:blank", "_blank");
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -106,14 +111,11 @@ export default function SambeekMap({
         const fresh = buildRouteUrls(orderForWalking(selectedPins, loc));
         setUserLocation(loc);
         setLocating(false);
-        const url = fresh[index] ?? fresh[0];
-        if (target) target.location.href = url;
-        else window.open(url, "_blank", "noopener");
+        navigateTo(fresh[index] ?? fresh[0]);
       },
       () => {
         setLocating(false);
-        if (target) target.location.href = routeUrls[index];
-        else window.open(routeUrls[index], "_blank", "noopener");
+        navigateTo(routeUrls[index]);
       },
       { timeout: 8000, maximumAge: 60_000 },
     );

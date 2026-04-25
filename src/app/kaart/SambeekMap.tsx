@@ -73,7 +73,8 @@ export default function SambeekMap({
     );
   }
 
-  const routeUrls = buildRouteUrls(selectedPins);
+  const orderedPins = useMemo(() => orderForWalking(selectedPins), [selectedPins]);
+  const routeUrls = buildRouteUrls(orderedPins);
   const allSelected =
     registrations.length > 0 && selected.length === registrations.length;
 
@@ -193,6 +194,39 @@ export default function SambeekMap({
 // Google Maps' URL directions endpoint accepts max 9 waypoints + 1 destination
 // (10 stops total). Chunk bigger selections into multiple routes.
 const MAX_STOPS_PER_ROUTE = 10;
+
+type Coord = { latitude: number; longitude: number };
+
+function distSq(a: Coord, b: Coord): number {
+  const dlat = a.latitude - b.latitude;
+  const dlng = a.longitude - b.longitude;
+  return dlat * dlat + dlng * dlng;
+}
+
+// Reorder selected pins for a sensible walking route. Starts at the
+// westernmost pin and greedily walks to the nearest unvisited pin
+// (nearest-neighbor heuristic). For a small village this produces a
+// route that visits clusters together instead of zig-zagging.
+function orderForWalking<T extends Coord & { id: string }>(pins: T[]): T[] {
+  if (pins.length <= 2) return pins;
+  const start = pins.reduce((a, b) => (a.longitude <= b.longitude ? a : b));
+  const remaining = pins.filter((p) => p.id !== start.id);
+  const route: T[] = [start];
+  while (remaining.length > 0) {
+    const last = route[route.length - 1];
+    let bestIdx = 0;
+    let bestDist = distSq(last, remaining[0]);
+    for (let i = 1; i < remaining.length; i++) {
+      const d = distSq(last, remaining[i]);
+      if (d < bestDist) {
+        bestDist = d;
+        bestIdx = i;
+      }
+    }
+    route.push(remaining.splice(bestIdx, 1)[0]);
+  }
+  return route;
+}
 
 function buildRouteUrls(pins: RegistrationPin[]): string[] {
   if (pins.length === 0) return [];

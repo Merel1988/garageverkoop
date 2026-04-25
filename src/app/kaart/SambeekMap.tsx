@@ -88,31 +88,18 @@ export default function SambeekMap({
     setSelected(allSelected ? [] : registrations.map((r) => r.id));
   }
 
-  function navigateTo(url: string) {
-    window.open(url, "_blank");
-  }
-
-  function openRoute(index: number) {
-    if (userLocation || !navigator.geolocation) {
-      navigateTo(routeUrls[index]);
-      return;
-    }
+  function requestLocation() {
+    if (!navigator.geolocation) return;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const loc: Coord = {
+        setUserLocation({
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
-        };
-        const fresh = buildRouteUrls(orderForWalking(selectedPins, loc));
-        setUserLocation(loc);
+        });
         setLocating(false);
-        navigateTo(fresh[index] ?? fresh[0]);
       },
-      () => {
-        setLocating(false);
-        navigateTo(routeUrls[index]);
-      },
+      () => setLocating(false),
       { timeout: 8000, maximumAge: 60_000 },
     );
   }
@@ -192,21 +179,27 @@ export default function SambeekMap({
               {selectedPins.length}{" "}
               {selectedPins.length === 1 ? "garage" : "garages"} gekozen
             </span>
-            {routeUrls.map((_url, i) => (
+            {!userLocation && (
               <button
-                key={i}
                 type="button"
+                onClick={requestLocation}
                 disabled={locating}
-                onClick={() => openRoute(i)}
-                style={{ color: "#ffffff" }}
-                className="bg-brand-700 hover:bg-brand-800 disabled:opacity-70 disabled:cursor-wait font-semibold px-3.5 py-1.5 rounded-full text-sm whitespace-nowrap"
+                className="bg-accent-300 hover:bg-accent-400 disabled:opacity-70 disabled:cursor-wait text-brand-800 font-semibold px-3.5 py-1.5 rounded-full text-sm whitespace-nowrap"
               >
-                {locating
-                  ? "Locatie ophalen..."
-                  : routeUrls.length === 1
-                    ? "Open route"
-                    : `Route ${i + 1}`}
+                {locating ? "Locatie ophalen..." : "Start vanaf mijn locatie"}
               </button>
+            )}
+            {routeUrls.map((url, i) => (
+              <a
+                key={i}
+                href={url}
+                target="_blank"
+                rel="noopener"
+                style={{ color: "#ffffff" }}
+                className="no-underline bg-brand-700 hover:bg-brand-800 font-semibold px-3.5 py-1.5 rounded-full text-sm whitespace-nowrap"
+              >
+                {routeUrls.length === 1 ? "Open route" : `Route ${i + 1}`}
+              </a>
             ))}
             <button
               type="button"

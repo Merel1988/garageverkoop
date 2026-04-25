@@ -25,8 +25,12 @@ export function SiteNav({ showAanmelden }: { showAanmelden: boolean }) {
 
   const items: Item[] = [
     { href: "/", label: "Home" },
-    ...(showAanmelden ? [{ href: "/aanmelden", label: "Aanmelden" }] : []),
-    { href: "/kaart", label: "Kaart" },
+    ...(showAanmelden
+      ? [
+          { href: "/meedoen", label: "Meedoen" },
+          { href: "/aanmelden", label: "Aanmelden" },
+        ]
+      : []),
   ];
 
   return (

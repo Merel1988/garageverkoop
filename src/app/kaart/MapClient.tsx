@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { ReactNode } from "react";
 import type { RegistrationPin } from "./types";
 
 const SambeekMap = dynamic(() => import("./SambeekMap"), {
@@ -12,6 +13,12 @@ const SambeekMap = dynamic(() => import("./SambeekMap"), {
   ),
 });
 
-export function MapClient({ registrations }: { registrations: RegistrationPin[] }) {
-  return <SambeekMap registrations={registrations} />;
+export function MapClient({
+  registrations,
+  headerExtra,
+}: {
+  registrations: RegistrationPin[];
+  headerExtra?: ReactNode;
+}) {
+  return <SambeekMap registrations={registrations} headerExtra={headerExtra} />;
 }

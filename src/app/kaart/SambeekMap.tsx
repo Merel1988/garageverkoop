@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -52,8 +52,10 @@ const pinIcon = L.divIcon({
 
 export default function SambeekMap({
   registrations,
+  headerExtra,
 }: {
   registrations: RegistrationPin[];
+  headerExtra?: ReactNode;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -81,15 +83,18 @@ export default function SambeekMap({
 
   return (
     <div className="relative">
-      {registrations.length > 1 && (
-        <div className="flex justify-end mb-3">
-          <button
-            type="button"
-            onClick={toggleAll}
-            className="bg-accent-300 hover:bg-accent-400 text-brand-800 font-semibold px-4 py-2 rounded-full text-sm transition-colors"
-          >
-            {allSelected ? "Deselecteer alle" : "Selecteer alle adressen"}
-          </button>
+      {(registrations.length > 1 || headerExtra) && (
+        <div className="flex flex-wrap justify-end gap-2 mb-3">
+          {headerExtra}
+          {registrations.length > 1 && (
+            <button
+              type="button"
+              onClick={toggleAll}
+              className="bg-accent-300 hover:bg-accent-400 text-brand-800 font-semibold px-4 py-2 rounded-full text-sm transition-colors"
+            >
+              {allSelected ? "Deselecteer alle" : "Selecteer alle adressen"}
+            </button>
+          )}
         </div>
       )}
       <div className="h-[70vh] min-h-[380px] rounded-3xl overflow-hidden">

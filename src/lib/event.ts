@@ -22,9 +22,14 @@ export function registrationDeadline(): Date | null {
 }
 
 export function registrationsOpen(now: Date = new Date()): boolean {
+  if (eventArchived()) return false;
   const deadline = registrationDeadline();
   if (!deadline) return true;
   return now < deadline;
+}
+
+export function eventArchived(): boolean {
+  return process.env.EVENT_ARCHIVED === "true";
 }
 
 export function formatEventDate(d: Date): string {

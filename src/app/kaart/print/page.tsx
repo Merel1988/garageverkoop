@@ -1,5 +1,11 @@
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { eventDate, eventTimeRange, formatEventDate } from "@/lib/event";
+import {
+  eventArchived,
+  eventDate,
+  eventTimeRange,
+  formatEventDate,
+} from "@/lib/event";
 import { PrintButton } from "./PrintButton";
 import { PrintMapClient } from "./PrintMapClient";
 import type { NumberedPin } from "./types";
@@ -12,6 +18,7 @@ export const metadata = {
 };
 
 export default async function PrintPage() {
+  if (eventArchived()) redirect("/");
   const registrations = await prisma.registration.findMany({
     where: { confirmedAt: { not: null } },
     select: {

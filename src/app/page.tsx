@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import {
+  eventArchived,
   eventDate,
   eventTimeRange,
   formatEventDate,
@@ -11,6 +12,10 @@ import { MapClient } from "./kaart/MapClient";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  if (eventArchived()) {
+    return <ArchivedPage />;
+  }
+
   const date = eventDate();
   const open = registrationsOpen();
 
@@ -121,6 +126,60 @@ export default async function HomePage() {
           </Link>
         </section>
       )}
+    </div>
+  );
+}
+
+function ArchivedPage() {
+  return (
+    <div className="space-y-12 sm:space-y-16">
+      <section className="space-y-5 py-4">
+        <p className="inline-flex items-center bg-accent-300 text-brand-800 font-bold px-4 py-1.5 rounded-full text-sm uppercase tracking-wide">
+          Editie 2026 afgerond
+        </p>
+        <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight text-brand-800 leading-[0.95]">
+          Bedankt
+          <br />
+          <span className="text-brand-500">Sambeek!</span>
+        </h1>
+        <p className="text-lg sm:text-xl text-gray-700 max-w-2xl leading-relaxed">
+          De garageverkoop van 2026 zit erop. Bedankt aan alle deelnemers,
+          bezoekers en helpers — door jullie werd het weer een ontzettend
+          gezellige dag in het dorp.
+        </p>
+      </section>
+
+      <section className="bg-[#519872] text-white rounded-3xl p-8 sm:p-12 space-y-3">
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+          Tot volgend jaar!
+        </h2>
+        <p className="text-white/90 leading-relaxed">
+          De volgende editie staat gepland op <strong>1e pinksterdag 2027</strong>.
+          Doe je weer mee? Of het nu je eerste keer is of je tiende — iedereen
+          is welkom om de garage open te zetten en er samen weer een feestje van
+          te maken.
+        </p>
+      </section>
+
+      <div className="max-w-md sm:max-w-lg mx-auto">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/illustraties/tafel.svg"
+          alt="Tafel met tweedehands spullen — boeken, theepot, lamp, knuffelbeer, bloem en lijstje — met prijskaartjes erbij"
+          className="w-full h-auto block"
+        />
+      </div>
+
+      <section className="bg-coral-100 rounded-3xl p-8 sm:p-12 space-y-3">
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-coral-500">
+          Houd onze socials in de gaten
+        </h2>
+        <p className="text-gray-800 leading-relaxed">
+          Zodra de inschrijvingen voor de editie van 2027 opengaan, kondigen we
+          dat aan via onze socials. Volg ons om als eerste te weten wanneer je
+          je weer kunt aanmelden.
+        </p>
+      </section>
     </div>
   );
 }

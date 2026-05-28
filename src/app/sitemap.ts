@@ -1,15 +1,24 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
-import { registrationsOpen } from "@/lib/event";
+import { eventArchived, registrationsOpen } from "@/lib/event";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+  const archived = eventArchived();
   const open = registrationsOpen();
 
   const entries: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
-    { url: `${SITE_URL}/kaart`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
   ];
+
+  if (!archived) {
+    entries.push({
+      url: `${SITE_URL}/kaart`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    });
+  }
 
   if (open) {
     entries.push(

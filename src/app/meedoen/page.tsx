@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
+  eventArchived,
   eventDate,
   eventTimeRange,
   formatEventDate,
@@ -23,6 +25,7 @@ export const metadata: Metadata = {
 };
 
 export default function MeedoenPage() {
+  if (eventArchived()) redirect("/");
   const date = eventDate();
   const open = registrationsOpen();
 

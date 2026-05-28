@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { eventArchived } from "@/lib/event";
 import { UnsubscribeForm } from "./UnsubscribeForm";
 
 export const dynamic = "force-dynamic";
@@ -7,6 +9,7 @@ export const dynamic = "force-dynamic";
 type Props = { params: Promise<{ token: string }> };
 
 export default async function AfmeldenPage({ params }: Props) {
+  if (eventArchived()) redirect("/");
   const { token } = await params;
 
   const registration = await prisma.registration.findUnique({

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { eventArchived } from "@/lib/event";
 import { MapClient } from "./MapClient";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function KaartPage() {
+  if (eventArchived()) redirect("/");
   const registrations = await prisma.registration.findMany({
     where: { confirmedAt: { not: null } },
     select: {

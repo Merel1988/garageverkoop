@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { registrationsOpen } from "@/lib/event";
+import { redirect } from "next/navigation";
+import { eventArchived, registrationsOpen } from "@/lib/event";
 import { RegistrationForm } from "./RegistrationForm";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function AanmeldenPage() {
+  if (eventArchived()) redirect("/");
   if (!registrationsOpen()) {
     return (
       <div className="max-w-xl mx-auto bg-white rounded-3xl p-8 sm:p-10 text-center space-y-3">
